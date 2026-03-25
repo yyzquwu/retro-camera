@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Camera</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
+        * { box-sizing: border-box; outline: none; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #d4d4d4;
+            background-image: radial-gradient(#e0e0e0 15%, transparent 16%), radial-gradient(#e0e0e0 15%, transparent 16%);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+            height: 100vh;
+            width: 100vw;
+            font-family: sans-serif;
+            overflow: hidden; 
+            display: flex;
+            flex-direction: row; 
+            user-select: none;
+            touch-action: none;
+        }
+
+
+
+        .camera-zone {
+            flex: 0 0 50%;
+            max-width: 1000px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: center;
+            position: relative;
+            z-index: 20;
+            padding: 40px;
+            padding-bottom: 120px; 
+        }
+
+        .camera-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px; 
+            aspect-ratio: 1 / 1; 
+        }
+
+        .camera-img {
+            width: 100%;
+            height: auto;
+            position: relative;
+            z-index: 20;
+            pointer-events: none;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.4));
+        }
+
+        .lens-wrapper {
+            position: absolute;
+            bottom: 35%;
+            left: 62%;
+            transform: translateX(-50%);
+            width: 26%;
+            height: 26%;
+            border-radius: 50%;
+            overflow: hidden;
+            z-index: 25; 
+            background: #000;
+            box-shadow: inset 0 0 15px #000;
+        }
+
+        video#cam-feed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            opacity: 0.9;
+            filter: sepia(0.3) contrast(1.1); /* Slight retro look on feed */
+        }
+
+        .lens-shine {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 30%;
+            height: 20%;
+            background: rgba(255,255,255,0.3);
+            transform: rotate(-45deg);
+            filter: blur(3px);
+            z-index: 26;
+            pointer-events: none;
+        }
+
+        .shutter-btn {
+            position: absolute;
+            bottom: 42%;
+            left: 18%;
+            width: 11%;
+            height: 11%;
+            border-radius: 50%;
+            z-index: 30;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Photo Column positioned at Top-Right of camera */
+        .photo-column {
+            position: absolute;
+            top: -60%;
+            right: -10%; 
+            width: 40%;
+            height: 150%;
+            z-index: 15;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* This makes contents scroll upwards naturally */
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 25%;
+        }
+
+        .desk-zone {
+            flex: 1;
+            position: relative;
+            height: 100%;
+        }
+
+        .btn-container {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            z-index: 200;
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 3px solid #d93025;
+            color: #d93025;
+            padding: 16px 32px;
+            border-radius: 40px;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #d93025;
+            color: white;
+        }
+
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        #download-btn {
+            border-color: #222;
+            color: #222;
+        }
+        #download-btn:hover {
+            background: #222;
+            color: white;
+        }
+
+        .polaroid {
+            width: 380px; 
+            background: #fdfdfd;
+            padding: 24px 24px 110px 24px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: absolute; 
+            cursor: grab;
+            pointer-events: auto;
+            transform-origin: center center;
+            touch-action: none;
+            transition: opacity 0.5s ease-out, transform 0.2s, box-shadow 0.2s;
+        }
+
+        .photo-column .polaroid {
+            position: relative;
+            top: auto !important;
+            left: auto !important;
+        }
+
+        .polaroid:active {
+            box-shadow: 0 35px 70px rgba(0,0,0,0.5);
+            z-index: 10000 !important;
+        }
+
+        /* Heavy Retro Filter applied on photo creation */
+        .polaroid img {
+            width: 100%;
+            height: 380px; 
+            object-fit: cover;
+            background: #222;
+            border: 1px solid #e0e0e0;
+            pointer-events: none;
+            display: block;
+            filter: sepia(0.6) contrast(1.2) brightness(0.9) saturate(1.3) hue-rotate(-5deg);
+            will-change: filter; 
+        }
+
+        .polaroid.developing-start img {
+            filter: blur(15px) grayscale(0.8) brightness(0.6);
+        }
+
+        .polaroid.developing-slow img {
+            transition: filter 6s ease-in-out;
+            filter: sepia(0.6) contrast(1.2) brightness(0.9) saturate(1.3) hue-rotate(-5deg) blur(0px);
+        }
+
+        .polaroid.developing-fast img {
+            transition: filter 3s ease-out !important;
+            filter: sepia(0.6) contrast(1.2) brightness(0.9) saturate(1.3) hue-rotate(-5deg) blur(0px);
+        }
+
+        .polaroid .caption-container {
+            position: absolute;
+            bottom: 20px;
+            left: 24px;
+            width: 332px; 
+            text-align: center;
+            color: #222;
+            opacity: 0.9;
+            cursor: text;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .polaroid .caption-main {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 32px;
+            line-height: 1.2;
+        }
+
+        .polaroid .caption-date {
+            font-family: 'Permanent Marker', cursive;
+            font-size: 20px; 
+            color: #555;
+            margin-top: 6px;
+        }
+
+        /* Scrolling upwards animation for elements injected to column */
+        .polaroid.ejecting {
+            animation: ejectAndScrollUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes ejectAndScrollUp {
+            0% { transform: translateY(100%) scale(0.8); opacity: 0; }
+            100% { transform: translateY(0) scale(1); opacity: 1; } 
+        }
+
+        .flash {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10000;
+            transition: opacity 0.1s;
+        }
+        .flash-active { opacity: 1; }
+
+        /* --- TOOLTIPS --- */
+        .tooltip {
+            position: absolute;
+            background: #333;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            white-space: nowrap;
+        }
+        
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            border: 6px solid transparent;
+        }
+
+        #tooltip-1 {
+            left: 2%;
+            bottom: 45%;
+            transform: translateY(10px);
+        }
+        #tooltip-1::after {
+            left: 100%;
+            top: 50%;
+            margin-top: -6px;
+            border-left-color: #333; 
+        }
+        #tooltip-1.visible {
+            opacity: 1;
+            transform: translateY(0);
+            animation: bounceHorizontal 1.5s infinite;
+        }
+
+        /* Tooltip 2: Repositioned for correct pointers to photo stream */
+        #tooltip-2 {
+            top: 60%; 
+            right: 120%;
+            transform: translateX(-10px);
+        }
+        #tooltip-2::after {
+            top: 50%;
+            left: 100%;
+            margin-top: -6px;
+            border-left-color: #333; 
+        }
+        #tooltip-2.visible {
+            opacity: 1;
+            transform: translateX(0);
+            animation: bounceHorizontalRight 1.5s infinite;
+        }
+
+        @keyframes bounceHorizontal {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-5px); }
+        }
+
+        @keyframes bounceHorizontalRight {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .camera-zone { 
+                flex: 0 0 auto; 
+                width: 100%; 
+                height: auto; 
+                padding-top: 60px; 
+                padding-bottom: 40px; 
+                justify-content: center;
+            }
+            .desk-zone { width: 100%; height: 100%; }
+            .btn-container { top: 10px; right: 10px; }
+            .action-btn { font-size: 12px; padding: 6px 12px; }
+            #tooltip-1 { left: 5%; bottom: 40%; }
+            .photo-column {
+                top: -30%;
+                right: 0%;
+                width: 45%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="btn-container">
+        <button class="action-btn" id="download-btn" title="Download Collage">DOWNLOAD</button>
+        <button class="action-btn" id="reset-btn" title="Clear all photos">RESET</button>
+    </div>
+
+    <div class="camera-zone">
+        <div class="camera-wrapper">
+            <div class="tooltip visible" id="tooltip-1">Click button to take pic</div>
+            
+            <div class="photo-column" id="photo-column">
+                <div class="tooltip" id="tooltip-2">Drag photos here to arrange</div>
+            </div>
+            
+            <div class="lens-wrapper">
+                <video id="cam-feed" autoplay playsinline muted></video>
+                <div class="lens-shine"></div>
+            </div>
+            <img src="https://www.bubbbly.com/assets/retro-camera.webp" class="camera-img" alt="Retro Camera">
+            <div class="shutter-btn" id="shutter"></div>
+        </div>
+    </div>
+
+    <div class="desk-zone" id="desk"></div>
+
+    <div class="flash" id="flash"></div>
+    <canvas id="canvas" style="display:none"></canvas>
+
+    <script>
+        const video = document.getElementById('cam-feed');
+        const canvas = document.getElementById('canvas');
+        const shutter = document.getElementById('shutter');
+        const photoColumn = document.getElementById('photo-column'); 
+        const flash = document.getElementById('flash');
+        const desk = document.getElementById('desk');
+        const resetBtn = document.getElementById('reset-btn');
+        const downloadBtn = document.getElementById('download-btn');
+        const cameraZone = document.querySelector('.camera-zone');
+        const btnContainer = document.querySelector('.btn-container');
+        
+        const tooltip1 = document.getElementById('tooltip-1');
+        const tooltip2 = document.getElementById('tooltip-2');
+        let firstShotTaken = false;
+
+        const printSound = new Audio('https://www.bubbbly.com/assets/retro-camera/polaroid-camera.mp3');
+        printSound.volume = 0.6;
+
+        let demosCleared = false;
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: 480, height: 480 } })
+            .then(stream => video.srcObject = stream)
+            .catch(err => console.error(err));
+
+        function getTodayDateString() {
+            const d = new Date();
+            const yyyy = d.getFullYear();
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            const dd = String(d.getDate()).padStart(2, '0');
+            return `${yyyy}/${mm}/${dd}`;
+        }
+
+        const demoDate = getTodayDateString();
+        const demos = [
+            { src: 'https://bubbbly.com/assets/retro-camera/cat-cute-3.webp', rot: '-5deg', top: '30%', left: '30%' },
+            { src: 'https://bubbbly.com/assets/retro-camera/cat-cute-2.webp', rot: '8deg', top: '35%', left: '45%' },
+            { src: 'https://bubbbly.com/assets/retro-camera/cat-cute-1.webp', rot: '-12deg', top: '45%', left: '35%' }
+        ];
+
+        function spawnDemos() {
+            desk.innerHTML = '';
+            demosCleared = false;
+            demos.forEach(d => {
+                createPolaroidElement(d.src, demoDate, d.top, d.left, d.rot, true, false);
+            });
+        }
+
+        spawnDemos();
+
+        function createPolaroidElement(imgSrc, dateStr, top, left, rot, isDemo = false, isNew = false) {
+            const div = document.createElement('div');
+            div.className = isDemo ? 'polaroid demo-polaroid' : 'polaroid';
+            
+            if (isNew) {
+                div.classList.add('developing-start');
+            }
+
+            // Using standard quotes rather than backticks inside HTML strings is safe
+            const htmlContent = '<img src="' + imgSrc + '">' +
+                '<div class="caption-container" contenteditable="true" spellcheck="false">' +
+                    '<div class="caption-main">May I meet you</div>' +
+                    '<div class="caption-date">' + dateStr + '</div>' +
+                '</div>';
+            div.innerHTML = htmlContent;
+            
+            if (top) div.style.top = top;
+            if (left) div.style.left = left;
+            if (rot) div.style.transform = 'rotate(' + rot + ')';
+
+            if (isDemo) {
+                desk.appendChild(div);
+            } else if (isNew) {
+                requestAnimationFrame(() => {
+                    div.offsetWidth; 
+                    div.classList.add('developing-slow');
+                    div.classList.remove('developing-start');
+                });
+            }
+            
+            makeDraggable(div);
+            return div;
+        }
+
+        function clearDemos() {
+            const demoItems = document.querySelectorAll('.demo-polaroid');
+            demoItems.forEach(item => {
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.8)';
+                setTimeout(() => item.remove(), 500);
+            });
+        }
+
+        resetBtn.addEventListener('click', () => {
+            document.querySelectorAll('.polaroid').forEach(p => p.remove());
+            demosCleared = false;
+            desk.innerHTML = '';
+            
+            Array.from(photoColumn.children).forEach(child => {
+                if(child.id !== 'tooltip-2') photoColumn.removeChild(child);
+            });
+            spawnDemos();
+            
+            firstShotTaken = false;
+            tooltip1.classList.add('visible');
+            tooltip2.classList.remove('visible');
+            if(!document.getElementById('tooltip-2')) {
+                const t2 = document.createElement('div');
+                t2.id = 'tooltip-2';
+                t2.className = 'tooltip';
+                t2.textContent = 'Drag photos here to arrange';
+                photoColumn.appendChild(t2);
+            }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            const t1Visible = tooltip1.classList.contains('visible');
+            const t2Visible = tooltip2.classList.contains('visible');
+            tooltip1.classList.remove('visible');
+            tooltip2.classList.remove('visible');
+
+            cameraZone.style.display = 'none';
+            btnContainer.style.display = 'none';
+
+            html2canvas(document.body, {
+                backgroundColor: '#d4d4d4',
+                useCORS: true,
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'my-polaroid-collage.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                cameraZone.style.display = 'flex';
+                btnContainer.style.display = 'flex';
+                
+                if(t1Visible) tooltip1.classList.add('visible');
+                if(t2Visible) tooltip2.classList.add('visible');
+            }).catch(err => {
+                console.error("Screenshot failed", err);
+                cameraZone.style.display = 'flex';
+                btnContainer.style.display = 'flex';
+            });
+        });
+
+        shutter.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            
+            if (!firstShotTaken) {
+                tooltip1.classList.remove('visible');
+                setTimeout(() => {
+                    tooltip2.classList.add('visible');
+                }, 500);
+                firstShotTaken = true;
+            }
+
+            if (!demosCleared) {
+                clearDemos();
+                demosCleared = true;
+            }
+
+            flash.classList.add('flash-active');
+            setTimeout(() => flash.classList.remove('flash-active'), 100);
+
+            printSound.currentTime = 0;
+            printSound.play().catch(e=>{});
+
+            const ctx = canvas.getContext('2d');
+            const size = Math.min(video.videoWidth, video.videoHeight);
+            canvas.width = 800; 
+            canvas.height = 800;
+            ctx.translate(800, 0);
+            ctx.scale(-1, 1);
+            
+            ctx.filter = 'sepia(0.3) contrast(1.1)'; 
+            ctx.drawImage(video, (video.videoWidth - size)/2, (video.videoHeight - size)/2, size, size, 0, 0, 800, 800);
+
+            ejectPhoto(canvas.toDataURL('image/jpeg'));
+        });
+
+        function ejectPhoto(src) {
+            const p = createPolaroidElement(src, getTodayDateString(), null, null, null, false, true);
+            p.classList.add('ejecting');
+            
+            const tilt = (Math.random() * 8 - 4).toFixed(1);
+            p.style.transform = 'rotate(' + tilt + 'deg)';
+            
+            photoColumn.appendChild(p);
+        }
+
+        function makeDraggable(elm) {
+            let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+
+            elm.addEventListener('mousedown', dragStart);
+            elm.addEventListener('touchstart', dragStart, {passive: false});
+
+            function dragStart(e) {
+                if (e.target.closest('.caption-container')) {
+                    elm.setAttribute('draggable', 'false'); 
+                    return; 
+                }
+
+                if (tooltip2.classList.contains('visible')) {
+                    tooltip2.classList.remove('visible');
+                }
+
+                e.preventDefault();
+
+                if (elm.classList.contains('developing-slow')) {
+                    elm.classList.remove('developing-slow');
+                    void elm.offsetWidth;
+                    elm.classList.add('developing-fast');
+                }
+
+                if (elm.classList.contains('ejecting')) {
+                    elm.classList.remove('ejecting');
+                }
+
+                if (elm.parentNode === photoColumn) {
+                    const rect = elm.getBoundingClientRect();
+                    document.body.appendChild(elm);
+                    elm.style.position = 'absolute';
+                    elm.style.left = rect.left + 'px';
+                    elm.style.top = rect.top + 'px';
+                    const currentRot = elm.style.transform;
+                    elm.style.transform = currentRot; 
+                } else if (elm.parentNode !== document.body) {
+                    const rect = elm.getBoundingClientRect();
+                    document.body.appendChild(elm);
+                    elm.style.left = rect.left + 'px';
+                    elm.style.top = rect.top + 'px';
+                }
+
+                elm.style.zIndex = 10000;
+
+                if (e.type === 'touchstart') {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                } else {
+                    startX = e.clientX;
+                    startY = e.clientY;
+                }
+
+                initialLeft = elm.offsetLeft;
+                initialTop = elm.offsetTop;
+
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('mousemove', dragMove);
+                document.addEventListener('touchend', dragEnd);
+                document.addEventListener('touchmove', dragMove, {passive: false});
+            }
+
+            function dragMove(e) {
+                e.preventDefault(); 
+                let currentX, currentY;
+
+                if (e.type === 'touchmove') {
+                    currentX = e.touches[0].clientX;
+                    currentY = e.touches[0].clientY;
+                } else {
+                    currentX = e.clientX;
+                    currentY = e.clientY;
+                }
+
+                const dx = currentX - startX;
+                const dy = currentY - startY;
+
+                elm.style.left = (initialLeft + dx) + 'px';
+                elm.style.top = (initialTop + dy) + 'px';
+                
+                const tilt = Math.max(-15, Math.min(15, (dx * 0.1)));
+                elm.style.transform = 'rotate(' + tilt + 'deg)' + ' scale(1.05)';
+            }
+
+            function dragEnd() {
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('mousemove', dragMove);
+                document.removeEventListener('touchend', dragEnd);
+                document.removeEventListener('touchmove', dragMove);
+                
+                elm.style.zIndex = 'auto';
+                const finalRot = (Math.random() * 20 - 10).toFixed(1);
+                elm.style.transition = "transform 0.2s, box-shadow 0.2s";
+                elm.style.transform = 'rotate(' + finalRot + 'deg)' + ' scale(1)';
+                setTimeout(() => {
+                    elm.style.transition = "";
+                }, 200);
+            }
+        }
+    </script>
+</body>
+</html>
