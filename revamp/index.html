@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+  <title>Retro Room Studio</title>
+  <meta
+    name="description"
+    content="A premium retro camera guestbook and memory studio for events, journals, and branded campaigns."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@400;500;700&family=Special+Elite&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="./styles/app.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="left-rail card">
+      <div class="brand-block">
+        <p class="eyebrow">Memory Product Studio</p>
+        <h1>Retro Room</h1>
+        <p class="brand-copy">
+          Build private guestbooks, couple journals, and brand-ready camera
+          activations from one retro surface.
+        </p>
+      </div>
+
+      <section class="stack-section">
+        <div class="section-heading">
+          <h2>Room Modes</h2>
+          <p>Separate offers, one product line.</p>
+        </div>
+        <div class="mode-grid" id="mode-grid"></div>
+      </section>
+
+      <section class="stack-section">
+        <div class="section-heading">
+          <h2>Your Rooms</h2>
+          <p>Local-first workspace with invite codes.</p>
+        </div>
+        <div class="room-list" id="room-list"></div>
+      </section>
+
+      <section class="stack-section join-panel">
+        <div class="section-heading">
+          <h2>Join a Room</h2>
+          <p>Works locally today. Adapter ready for real sync later.</p>
+        </div>
+        <label class="field">
+          <span class="field-label">Invite code</span>
+          <div class="inline-field">
+            <input
+              id="join-code-input"
+              class="text-input"
+              type="text"
+              placeholder="ROOM-7241"
+              maxlength="14"
+            >
+            <button class="pill-button" id="join-room-btn" type="button">
+              Join
+            </button>
+          </div>
+        </label>
+        <p class="helper-text" id="join-message">
+          Paste a room code or use a share link with `?room=CODE`.
+        </p>
+      </section>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar card">
+        <div class="topbar-copy">
+          <p class="eyebrow" id="room-badge">Event Guestbook</p>
+          <div class="topbar-title-row">
+            <h2 id="room-title">Room Name</h2>
+            <span class="status-chip" id="save-indicator">Saved</span>
+          </div>
+          <p id="room-subtitle">
+            Premium camera room with private notes, exports, and productized
+            packaging.
+          </p>
+        </div>
+        <div class="topbar-actions">
+          <button class="ghost-button" id="invite-btn" type="button">
+            Invite
+          </button>
+          <button class="ghost-button" id="seed-demo-btn" type="button">
+            Add Demo Shot
+          </button>
+          <button class="ghost-button danger" id="clear-room-btn" type="button">
+            Clear Room
+          </button>
+        </div>
+      </header>
+
+      <div class="workspace-grid">
+        <section class="camera-panel card">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Capture</p>
+              <h3>Camera Deck</h3>
+            </div>
+            <div class="camera-badges">
+              <span class="mini-chip" id="camera-status-pill">Standby</span>
+              <span class="mini-chip" id="camera-counter">00 frames</span>
+            </div>
+          </div>
+
+          <div class="camera-body">
+            <div class="camera-body-top">
+              <div class="camera-meter">
+                <span class="meter-dot active"></span>
+                <span class="meter-dot"></span>
+                <span class="meter-label" id="camera-meter-label">Ready</span>
+              </div>
+              <div class="camera-logo">
+                <span>Room</span>
+                <span>Studio</span>
+              </div>
+            </div>
+
+            <div class="lens-panel">
+              <video id="camera-feed" autoplay playsinline muted></video>
+              <div class="camera-placeholder" id="camera-placeholder">
+                <div class="placeholder-badge">Demo Feed</div>
+                <p>No live stream yet</p>
+                <span>Start camera or import a photo.</span>
+              </div>
+              <div class="lens-gloss"></div>
+              <div class="timer-countdown hidden" id="timer-countdown">3</div>
+              <div class="preview-caption">
+                <span id="preview-preset-label">Warm 70s</span>
+                <span id="preview-ratio-label">1:1</span>
+              </div>
+            </div>
+
+            <div class="camera-controls">
+              <button class="ghost-button" id="start-camera-btn" type="button">
+                Start Camera
+              </button>
+              <button class="ghost-button" id="switch-camera-btn" type="button">
+                Switch Lens
+              </button>
+              <label class="ghost-button upload-button" for="photo-upload-input">
+                Import Photo
+              </label>
+              <input
+                id="photo-upload-input"
+                type="file"
+                accept="image/*"
+                hidden
+              >
+            </div>
+
+            <button class="shutter-button" id="capture-btn" type="button">
+              <span class="shutter-ring"></span>
+              <span class="shutter-core"></span>
+            </button>
+          </div>
+
+          <div class="control-grid">
+            <label class="field">
+              <span class="field-label">Timer</span>
+              <select class="text-input" id="timer-select"></select>
+            </label>
+            <label class="field">
+              <span class="field-label">Aspect ratio</span>
+              <select class="text-input" id="ratio-select"></select>
+            </label>
+            <label class="field">
+              <span class="field-label">Film pack</span>
+              <select class="text-input" id="preset-select"></select>
+            </label>
+            <label class="field">
+              <span class="field-label">Frame</span>
+              <select class="text-input" id="frame-select"></select>
+            </label>
+            <label class="field wide">
+              <span class="field-label">Surface theme</span>
+              <select class="text-input" id="theme-select"></select>
+            </label>
+          </div>
+
+          <div class="room-story" id="room-story"></div>
+        </section>
+
+        <section class="stage-panel card">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Arrange</p>
+              <h3>Memory Surface</h3>
+            </div>
+            <div class="stage-actions">
+              <button class="ghost-button" id="auto-arrange-btn" type="button">
+                Auto Arrange
+              </button>
+              <button class="ghost-button" id="download-collage-btn" type="button">
+                Download Collage
+              </button>
+            </div>
+          </div>
+
+          <div class="stage-surface theme-walnut" id="stage-surface">
+            <div class="surface-haze"></div>
+            <div class="surface-grain"></div>
+            <div class="surface-empty" id="stage-empty">
+              <p class="eyebrow">Start the room</p>
+              <h3>Capture the first memory</h3>
+              <p>
+                Rooms keep private notes, premium film packs, and export-ready
+                layouts for events, journals, and brand activations.
+              </p>
+            </div>
+            <div class="polaroid-layer" id="polaroid-layer"></div>
+          </div>
+        </section>
+
+        <aside class="inspector-panel card">
+          <div class="inspector-tabs" id="tab-bar">
+            <button class="tab-button active" data-tab="overview" type="button">
+              Overview
+            </button>
+            <button class="tab-button" data-tab="selected" type="button">
+              Selected
+            </button>
+            <button class="tab-button" data-tab="gallery" type="button">
+              Gallery
+            </button>
+            <button class="tab-button" data-tab="monetize" type="button">
+              Monetize
+            </button>
+          </div>
+
+          <div class="tab-panel active" data-panel="overview">
+            <div class="section-heading">
+              <h2>Room Settings</h2>
+              <p>Shape the product offer and visual identity.</p>
+            </div>
+            <div class="form-stack" id="overview-panel"></div>
+          </div>
+
+          <div class="tab-panel" data-panel="selected">
+            <div class="section-heading">
+              <h2>Selected Polaroid</h2>
+              <p>Adjust caption, note, frame, and export options.</p>
+            </div>
+            <div class="form-stack" id="selected-panel"></div>
+          </div>
+
+          <div class="tab-panel" data-panel="gallery">
+            <div class="section-heading">
+              <h2>Gallery & Exports</h2>
+              <p>History, reusable assets, and print outputs.</p>
+            </div>
+            <div class="form-stack" id="gallery-panel"></div>
+          </div>
+
+          <div class="tab-panel" data-panel="monetize">
+            <div class="section-heading">
+              <h2>Monetization Surface</h2>
+              <p>Package the experience like a business, not a toy.</p>
+            </div>
+            <div class="form-stack" id="monetize-panel"></div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <dialog class="retro-dialog" id="invite-dialog">
+    <div class="dialog-header">
+      <div>
+        <p class="eyebrow">Invite Guests</p>
+        <h3>Share the room</h3>
+      </div>
+      <button class="icon-button" id="close-invite-btn" type="button">Close</button>
+    </div>
+    <div class="invite-layout">
+      <div class="invite-card" id="invite-card"></div>
+      <div class="invite-qr-block">
+        <img id="invite-qr" alt="Room invite QR code">
+        <p>
+          Static build note: QR is generated from the share link so the front
+          end is demoable now and ready for real sync later.
+        </p>
+      </div>
+    </div>
+  </dialog>
+
+  <p class="smoke-test-status" id="smoke-test-status" aria-live="polite"></p>
+
+  <script type="module" src="./scripts/main.js"></script>
+</body>
+</html>
