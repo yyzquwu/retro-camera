@@ -24,6 +24,7 @@ import {
   downloadCanvas,
   openPrintGuestbook,
 } from "./exporters.js";
+import { buildUiPhotoAssets } from "./image-processor.js";
 import {
   addRoom,
   cloneState,
@@ -92,6 +93,9 @@ let persistTimer = null;
 let dragState = null;
 let cameraMessage = "Standby";
 let cameraCountdownHandle = null;
+let renderQueued = false;
+const runtimePhotoAssets = new Map();
+const pendingPhotoAssetJobs = new Map();
 
 bootstrap();
 
@@ -101,6 +105,7 @@ function bootstrap() {
   resolveRoomFromUrl();
   ensureStarterRoomHasSamples();
   render();
+  scheduleActiveRoomAssetHydration();
   runSmokeTestIfNeeded();
 }
 
@@ -237,7 +242,7 @@ function bindStaticEvents() {
     if (!button) {
       return;
     }
-    updateUi({ activeTab: button.dataset.tab });
+    updateUi({ activeTab: button.dataset.tab }, { persist: false });
     render();
   });
 
@@ -272,7 +277,8 @@ function getSelectedPhoto(room = getActiveRoom()) {
   return room.photos.find((photo) => photo.id === state.ui.selectedPhotoId) ?? null;
 }
 
-function updateUi(partialUi) {
+function updateUi(partialUi, options = {}) {
+  const { persist = true } = options;
   state = {
     ...state,
     ui: {
@@ -280,7 +286,9 @@ function updateUi(partialUi) {
       ...partialUi,
     },
   };
-  queuePersist();
+  if (persist) {
+    queuePersist();
+  }
 }
 
 function updateActiveRoom(mutator) {
@@ -295,6 +303,18 @@ function updateActiveRoom(mutator) {
   state = replaceRoom(state, draft);
   queuePersist();
   render();
+}
+
+function scheduleRender() {
+  if (renderQueued) {
+    return;
+  }
+
+  renderQueued = true;
+  requestAnimationFrame(() => {
+    renderQueued = false;
+    render();
+  });
 }
 
 function queuePersist() {
@@ -363,6 +383,7 @@ function ensureStarterRoomHasSamples() {
   targetRoom.photos.push(
     createPhoto({
       src: sampleOne,
+      originalSrc: sampleOne,
       caption: "Doorway Glow",
       note: "First guests just arrived and the room finally feels alive.",
       presetId: targetRoom.defaultPresetId,
@@ -373,6 +394,7 @@ function ensureStarterRoomHasSamples() {
     }),
     createPhoto({
       src: sampleTwo,
+      originalSrc: sampleTwo,
       caption: "Table Talk",
       note: "Keep the camera moving and capture the in-between moments.",
       presetId: targetRoom.defaultPresetId,
@@ -401,10 +423,40 @@ function render() {
   renderRoomStory(room);
   renderStage(room);
   renderTabs();
-  renderOverviewPanel(room);
-  renderSelectedPanel(room);
-  renderGalleryPanel(room);
+  renderActiveInspectorPanel(room);
+}
+
+function renderActiveInspectorPanel(room) {
+  const activeTab = state.ui.activeTab;
+
+  if (activeTab === "overview") {
+    renderOverviewPanel(room);
+    elements.selectedPanel.innerHTML = "";
+    elements.galleryPanel.innerHTML = "";
+    elements.monetizePanel.innerHTML = "";
+    return;
+  }
+
+  if (activeTab === "selected") {
+    renderSelectedPanel(room);
+    elements.overviewPanel.innerHTML = "";
+    elements.galleryPanel.innerHTML = "";
+    elements.monetizePanel.innerHTML = "";
+    return;
+  }
+
+  if (activeTab === "gallery") {
+    renderGalleryPanel(room);
+    elements.overviewPanel.innerHTML = "";
+    elements.selectedPanel.innerHTML = "";
+    elements.monetizePanel.innerHTML = "";
+    return;
+  }
+
   renderMonetizePanel(room);
+  elements.overviewPanel.innerHTML = "";
+  elements.selectedPanel.innerHTML = "";
+  elements.galleryPanel.innerHTML = "";
 }
 
 function renderModeGrid(room) {
@@ -511,11 +563,11 @@ function renderStage(room) {
 
 function renderPhotoCardMarkup(room, photo, layerWidth, layerHeight) {
   const selected = photo.id === state.ui.selectedPhotoId;
-  const preset = getPresetById(photo.presetId);
   const notePreview = photo.note ? photo.note.slice(0, 110) : room.prompt;
   const tag = room.typeId === "brand" ? room.hostName : room.typeId === "journal" ? "Private note" : room.code;
   const safeX = clamp(photo.x, 24, Math.max(24, layerWidth - (photo.width ?? 224) - 18));
   const safeY = clamp(photo.y, 24, Math.max(24, layerHeight - 300));
+  const displaySrc = getDisplaySrc(photo);
   return `
     <article
       class="polaroid-card frame-${photo.frameId} ${photo.flipped ? "is-flipped" : ""} ${selected ? "selected" : ""}"
@@ -532,9 +584,9 @@ function renderPhotoCardMarkup(room, photo, layerWidth, layerHeight) {
           <div class="polaroid-shell">
             <div class="photo-window">
               <img
-                src="${photo.src}"
+                src="${displaySrc}"
                 alt="${photo.caption}"
-                style="filter:${preset.cssFilter};"
+                decoding="async"
               >
             </div>
             <div class="photo-caption">
@@ -658,7 +710,7 @@ function renderSelectedPanel(room) {
 
   elements.selectedPanel.innerHTML = `
     <div class="selected-preview">
-      <img src="${photo.src}" alt="${escapeAttribute(photo.caption)}" style="filter:${getPresetById(photo.presetId).cssFilter}">
+      <img src="${getDisplaySrc(photo)}" alt="${escapeAttribute(photo.caption)}" decoding="async">
     </div>
     <label class="field">
       <span class="field-label">Front caption</span>
@@ -725,7 +777,7 @@ function renderGalleryPanel(room) {
       ${photos.length
         ? photos.map((photo) => `
           <article class="gallery-card">
-            <img src="${photo.src}" alt="${escapeAttribute(photo.caption)}" style="filter:${getPresetById(photo.presetId).cssFilter}">
+            <img src="${getThumbnailSrc(photo)}" alt="${escapeAttribute(photo.caption)}" loading="lazy" decoding="async">
             <div class="gallery-card-meta">
               <h3>${escapeHtml(photo.caption)}</h3>
               <p>${photo.displayDate} • ${getPresetById(photo.presetId).label}</p>
@@ -803,6 +855,7 @@ function handleModeGridClick(event) {
   state.ui.selectedPhotoId = null;
   queuePersist();
   render();
+  scheduleActiveRoomAssetHydration();
 }
 
 function handleRoomListClick(event) {
@@ -814,6 +867,7 @@ function handleRoomListClick(event) {
   state.ui.selectedPhotoId = getActiveRoom()?.photos[0]?.id ?? null;
   queuePersist();
   render();
+  scheduleActiveRoomAssetHydration();
 }
 
 function handleJoinRoom() {
@@ -834,6 +888,7 @@ function handleJoinRoom() {
   queuePersist();
   elements.joinMessage.textContent = `Joined ${room.name}.`;
   render();
+  scheduleActiveRoomAssetHydration();
 }
 
 async function startCamera(facingMode = state.ui.facingMode) {
@@ -875,6 +930,7 @@ function createPhotoEntry(src, overrides = {}) {
   const nextIndex = room.photos.length;
   const photo = createPhoto({
     src,
+    originalSrc: src,
     caption: overrides.caption ?? "Untitled Memory",
     note: overrides.note ?? (room.typeId === "journal" ? room.prompt : ""),
     presetId: room.defaultPresetId,
@@ -892,8 +948,9 @@ function createPhotoEntry(src, overrides = {}) {
     draft.photos.push(photo);
   });
 
-  updateUi({ selectedPhotoId: photo.id, activeTab: "selected" });
+  updateUi({ selectedPhotoId: photo.id, activeTab: "selected" }, { persist: false });
   render();
+  schedulePhotoAssetHydration(photo.id);
 }
 
 function addDemoShot() {
@@ -973,6 +1030,7 @@ function handleSelectedPanelInput(event) {
   }
 
   const nextValue = event.target.value;
+  const needsAssetRefresh = photoField === "presetId";
   if (photoField === "presetId" && !isPresetAvailable(room, nextValue)) {
     setTransientMessage("Enable Creator Pass to use premium film packs.");
     render();
@@ -989,6 +1047,9 @@ function handleSelectedPanelInput(event) {
       photo.id === selectedPhotoId ? { ...photo, [photoField]: nextValue } : photo
     ));
   });
+  if (needsAssetRefresh) {
+    schedulePhotoAssetHydration(selectedPhotoId);
+  }
 }
 
 async function handleSelectedPanelClick(event) {
@@ -1013,7 +1074,7 @@ async function handleGalleryClick(event) {
   }
 
   if (galleryAction === "select") {
-    updateUi({ selectedPhotoId: photoId, activeTab: "selected" });
+    updateUi({ selectedPhotoId: photoId, activeTab: "selected" }, { persist: false });
     render();
     return;
   }
@@ -1124,7 +1185,8 @@ async function runPhotoAction(action, photoId) {
       frameId: photo.frameId,
       favorite: false,
       flipped: false,
-      src: photo.src,
+      src: photo.originalSrc || photo.src,
+      originalSrc: photo.originalSrc || photo.src,
       displayDate: photo.displayDate,
       x: photo.x + 42,
       y: photo.y + 38,
@@ -1134,8 +1196,9 @@ async function runPhotoAction(action, photoId) {
     updateActiveRoom((draft) => {
       draft.photos.push(clone);
     });
-    updateUi({ selectedPhotoId: clone.id });
+    updateUi({ selectedPhotoId: clone.id }, { persist: false });
     render();
+    schedulePhotoAssetHydration(clone.id);
     return;
   }
 
@@ -1143,7 +1206,7 @@ async function runPhotoAction(action, photoId) {
     updateActiveRoom((draft) => {
       draft.photos = draft.photos.filter((entry) => entry.id !== photoId);
     });
-    updateUi({ selectedPhotoId: getActiveRoom()?.photos[0]?.id ?? null });
+    updateUi({ selectedPhotoId: getActiveRoom()?.photos[0]?.id ?? null }, { persist: false });
     render();
     return;
   }
@@ -1202,7 +1265,7 @@ function handleStageClick(event) {
     return;
   }
 
-  updateUi({ selectedPhotoId: card.dataset.photoId });
+  updateUi({ selectedPhotoId: card.dataset.photoId }, { persist: false });
   render();
 }
 
@@ -1222,7 +1285,7 @@ function beginDrag(event) {
     return;
   }
 
-  updateUi({ selectedPhotoId: photo.id });
+  updateUi({ selectedPhotoId: photo.id }, { persist: false });
   const layerRect = elements.polaroidLayer.getBoundingClientRect();
   dragState = {
     photoId: photo.id,
@@ -1359,6 +1422,77 @@ function copyText(value, successMessage) {
   }
 }
 
+function getDisplaySrc(photo) {
+  const assets = runtimePhotoAssets.get(photo.id);
+  if (assets && assets.assetPresetId === photo.presetId) {
+    return assets.displaySrc;
+  }
+  return photo.originalSrc || photo.src;
+}
+
+function getThumbnailSrc(photo) {
+  const assets = runtimePhotoAssets.get(photo.id);
+  if (assets && assets.assetPresetId === photo.presetId) {
+    return assets.thumbnailSrc || assets.displaySrc;
+  }
+  return photo.originalSrc || photo.src;
+}
+
+function scheduleActiveRoomAssetHydration() {
+  const room = getActiveRoom();
+  if (!room) {
+    return;
+  }
+
+  for (const photo of room.photos) {
+    schedulePhotoAssetHydration(photo.id);
+  }
+}
+
+function schedulePhotoAssetHydration(photoId) {
+  const room = getActiveRoom();
+  const photo = room?.photos.find((entry) => entry.id === photoId);
+  if (!photo) {
+    return;
+  }
+
+  const currentAssets = runtimePhotoAssets.get(photo.id);
+  if (currentAssets && currentAssets.assetPresetId === photo.presetId) {
+    return;
+  }
+
+  const jobKey = `${photo.id}::${photo.presetId}`;
+  if (pendingPhotoAssetJobs.has(jobKey)) {
+    return;
+  }
+
+  const runJob = async () => {
+    try {
+      const assets = await buildUiPhotoAssets(photo);
+      const latestPhoto = getActiveRoom()?.photos.find((entry) => entry.id === photo.id)
+        ?? state.rooms.flatMap((entry) => entry.photos).find((entry) => entry.id === photo.id);
+      if (!latestPhoto || latestPhoto.presetId !== photo.presetId) {
+        return;
+      }
+      runtimePhotoAssets.set(photo.id, assets);
+      if (getActiveRoom()?.photos.some((entry) => entry.id === photo.id)) {
+        scheduleRender();
+      }
+    } catch (error) {
+      console.error("Failed to build UI photo assets", error);
+    } finally {
+      pendingPhotoAssetJobs.delete(jobKey);
+    }
+  };
+
+  pendingPhotoAssetJobs.set(jobKey, runJob);
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(() => runJob(), { timeout: 300 });
+  } else {
+    window.setTimeout(runJob, 0);
+  }
+}
+
 async function runCountdown(seconds) {
   window.clearInterval(cameraCountdownHandle);
   elements.timerCountdown.classList.remove("hidden");
@@ -1441,7 +1575,7 @@ async function runSmokeTestIfNeeded() {
       addDemoShot();
     }
 
-    updateUi({ activeTab: "gallery", selectedPhotoId: getActiveRoom().photos[0]?.id ?? null });
+    updateUi({ activeTab: "gallery", selectedPhotoId: getActiveRoom().photos[0]?.id ?? null }, { persist: false });
     render();
 
     const latestRoom = getActiveRoom();

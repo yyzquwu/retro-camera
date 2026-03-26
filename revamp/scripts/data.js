@@ -335,6 +335,10 @@ export function createPhoto(overrides = {}) {
       day: "numeric",
     }),
     src: "",
+    originalSrc: "",
+    displaySrc: "",
+    thumbnailSrc: "",
+    assetPresetId: "",
     ...overrides,
   };
 }

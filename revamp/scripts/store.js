@@ -16,7 +16,15 @@ function normalizeRoom(room) {
   return {
     ...createRoom(room?.typeId ?? "event"),
     ...room,
-    photos: Array.isArray(room?.photos) ? room.photos : [],
+    photos: Array.isArray(room?.photos)
+      ? room.photos.map((photo) => ({
+        originalSrc: photo?.originalSrc ?? photo?.src ?? "",
+        displaySrc: photo?.displaySrc ?? "",
+        thumbnailSrc: photo?.thumbnailSrc ?? "",
+        assetPresetId: photo?.assetPresetId ?? "",
+        ...photo,
+      }))
+      : [],
     addOns: Array.isArray(room?.addOns) ? room.addOns : [],
   };
 }

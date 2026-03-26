@@ -186,7 +186,7 @@ async function renderPolaroidCard(context, room, photo, options = {}) {
 
   const imageInset = size * 0.065;
   const imageSize = size - imageInset * 2;
-  await drawPhotoWindow(context, photo.src, photo, imageInset, imageInset, imageSize);
+  await drawPhotoWindow(context, photo.originalSrc || photo.src, photo, imageInset, imageInset, imageSize);
 
   context.strokeStyle = "rgba(0, 0, 0, 0.08)";
   context.lineWidth = 1;
@@ -364,7 +364,7 @@ export function openPrintGuestbook(room) {
               <h1>${photo.caption}</h1>
             </header>
             <section class="print-photo">
-              <img src="${photo.src}" alt="${photo.caption}">
+              <img src="${photo.displaySrc || photo.originalSrc || photo.src}" alt="${photo.caption}">
             </section>
             <footer>
               <div>
