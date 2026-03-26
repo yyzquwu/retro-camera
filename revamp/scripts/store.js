@@ -67,7 +67,13 @@ export function loadState() {
 }
 
 export function saveState(state) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    return true;
+  } catch (error) {
+    console.warn("Failed to persist Retro Room Studio state", error);
+    return false;
+  }
 }
 
 export function replaceRoom(state, room) {

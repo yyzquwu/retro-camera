@@ -1331,6 +1331,21 @@ img {
   color: #f5f0e4;
 }
 
+.monetize-summary-card {
+  background:
+    radial-gradient(circle at top left, rgba(255, 248, 237, 0.84), transparent 42%),
+    linear-gradient(180deg, rgba(255, 249, 241, 0.94), rgba(244, 232, 214, 0.9));
+}
+
+.monetize-summary-card .info-tile {
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: none;
+}
+
+.monetize-kpis .info-tile p {
+  font-size: 0.95rem;
+}
+
 .label-row {
   display: flex;
   justify-content: space-between;

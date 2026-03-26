@@ -113,6 +113,9 @@ let dragState = null;
 let cameraMessage = "Standby";
 let cameraCountdownHandle = null;
 let renderQueued = false;
+let lastModeGridType = "";
+let lastRoomListSignature = "";
+let lastStagePhotoSignature = "";
 const runtimePhotoAssets = new Map();
 const pendingPhotoAssetJobs = new Map();
 
@@ -486,8 +489,6 @@ function renderActiveInspectorPanel(room) {
   elements.galleryPanel.innerHTML = "";
 }
 
-let lastModeGridType = "";
-
 function renderModeGrid(room) {
   if (lastModeGridType === room.typeId) {
     return;
@@ -507,8 +508,6 @@ function renderModeGrid(room) {
     </article>
   `).join("");
 }
-
-let lastRoomListSignature = "";
 
 function renderRoomList(activeRoom) {
   const sig = state.rooms.map((r) => `${r.id}:${r.name}:${r.subtitle}:${r.photos.length}:${r.typeId}`).join("|") + `:${activeRoom.id}`;
@@ -590,8 +589,6 @@ function renderRoomStory(room) {
     </article>
   `;
 }
-
-let lastStagePhotoSignature = "";
 
 function renderStage(room) {
   const theme = getThemeById(room.themeId);
@@ -865,30 +862,108 @@ function renderGalleryPanel(room) {
   `;
 }
 
+function formatOfferRevenue(amount, billingLabel) {
+  const lowerBillingLabel = billingLabel.toLowerCase();
+  if (lowerBillingLabel.includes("month")) {
+    return `$${amount} / month`;
+  }
+  if (lowerBillingLabel.includes("event")) {
+    return `$${amount} / event`;
+  }
+  if (lowerBillingLabel.includes("campaign")) {
+    return `$${amount} / campaign`;
+  }
+  return `$${amount}`;
+}
+
+function getMonetizationSnapshot(room) {
+  const roomType = getRoomTypeById(room.typeId);
+  const activePackage = MONETIZATION_PACKAGES.find((pkg) => pkg.id === room.packageId)
+    ?? MONETIZATION_PACKAGES[0];
+  const activeAddOns = ADD_ONS.filter((addOn) => room.addOns.includes(addOn.id));
+  const projectedRevenue = activePackage.amount + activeAddOns.reduce((sum, addOn) => sum + (addOn.amount ?? 0), 0);
+  const revenueText = formatOfferRevenue(projectedRevenue, activePackage.billingLabel);
+  const nextUpsell = ADD_ONS.find((addOn) => !room.addOns.includes(addOn.id))?.label ?? "Offer stack is fully enabled";
+
+  return {
+    roomType,
+    activePackage,
+    activeAddOns,
+    projectedRevenue,
+    revenueText,
+    nextUpsell,
+  };
+}
+
 function renderMonetizePanel(room) {
-  const recommendedRevenue = room.typeId === "event" ? 49 : room.typeId === "journal" ? 9 : 299;
-  const activePackageId = room.packageId;
+  const {
+    roomType,
+    activePackage,
+    activeAddOns,
+    revenueText,
+    nextUpsell,
+  } = getMonetizationSnapshot(room);
 
   elements.monetizePanel.innerHTML = `
-    <div class="info-tile">
-      <h3>Positioning</h3>
-      <p>${getRoomTypeById(room.typeId).description}</p>
+    <div class="info-tile monetize-summary-card">
+      <p class="eyebrow">Offer Builder</p>
+      <h3>${activePackage.label}</h3>
+      <p>${activePackage.salesLead}</p>
+      <div class="info-row monetize-kpis">
+        <article class="info-tile">
+          <h3>Starting ticket</h3>
+          <p class="metric-note">${revenueText}</p>
+        </article>
+        <article class="info-tile">
+          <h3>Buyer</h3>
+          <p>${roomType.buyerLabel}</p>
+        </article>
+      </div>
+      <div class="info-row monetize-kpis">
+        <article class="info-tile">
+          <h3>Billing model</h3>
+          <p>${activePackage.billingLabel}</p>
+        </article>
+        <article class="info-tile">
+          <h3>Delivery</h3>
+          <p>${activePackage.timeline}</p>
+        </article>
+      </div>
+    </div>
+    <div class="info-row">
+      <article class="info-tile">
+        <h3>Positioning</h3>
+        <p>${roomType.description}</p>
+      </article>
+      <article class="info-tile">
+        <h3>How to sell it</h3>
+        <p>${roomType.salesPitch}</p>
+      </article>
     </div>
     <div class="monetize-grid">
       ${MONETIZATION_PACKAGES.map((pkg) => `
-        <article class="pricing-card ${pkg.id === activePackageId ? "active" : ""}">
+        <article class="pricing-card ${pkg.id === activePackage.id ? "active" : ""}">
           <div class="label-row">
             <h3>${pkg.label}</h3>
             <span class="price-pill">${pkg.price}</span>
           </div>
+          <p class="metric-note">${pkg.billingLabel}</p>
           <p>${pkg.description}</p>
           <p class="metric-note">Best for: ${pkg.bestFor}</p>
           <ul class="offer-points">
             ${pkg.includes.map((point) => `<li>${point}</li>`).join("")}
           </ul>
-          <button class="pill-button" data-package-id="${pkg.id}" type="button">Apply Package</button>
+          <button class="pill-button" data-package-id="${pkg.id}" type="button">${pkg.id === activePackage.id ? "Current Package" : "Switch to Package"}</button>
         </article>
       `).join("")}
+    </div>
+    <div class="info-tile">
+      <h3>Launch checklist</h3>
+      <ul class="offer-points">
+        <li>Choose the package that matches the buyer you want to close first.</li>
+        <li>Use add-ons to increase ticket size with print, premium looks, or brand deliverables.</li>
+        <li>Rewrite the room CTA before launch so the hosted room sells the offer for you.</li>
+      </ul>
     </div>
     <div class="addon-grid">
       ${ADD_ONS.map((addOn) => `
@@ -896,6 +971,7 @@ function renderMonetizePanel(room) {
           <div>
             <h3>${addOn.label}</h3>
             <p>${addOn.description}</p>
+            <p class="metric-note">${addOn.impact}</p>
           </div>
           <div class="toggle-wrap">
             <span class="price-pill">${addOn.price}</span>
@@ -906,8 +982,18 @@ function renderMonetizePanel(room) {
     </div>
     <div class="info-row">
       <article class="info-tile">
-        <h3>Suggested offer</h3>
-        <p>${recommendedRevenue === 9 ? "$9 / month recurring" : `$${recommendedRevenue} starting price`}</p>
+        <h3>Projected revenue</h3>
+        <p>${revenueText}</p>
+      </article>
+      <article class="info-tile">
+        <h3>Next upsell</h3>
+        <p>${nextUpsell}</p>
+      </article>
+    </div>
+    <div class="info-row">
+      <article class="info-tile">
+        <h3>Enabled add-ons</h3>
+        <p>${activeAddOns.length ? activeAddOns.map((addOn) => addOn.label).join(", ") : "None yet"}</p>
       </article>
       <article class="info-tile">
         <h3>Premium access</h3>
@@ -1657,6 +1743,7 @@ async function runSmokeTestIfNeeded() {
   }
 
   try {
+    elements.body.dataset.testStatus = "running";
     const room = getActiveRoom();
     if (!room.photos.length) {
       addDemoShot();
@@ -1664,6 +1751,7 @@ async function runSmokeTestIfNeeded() {
 
     updateUi({ activeTab: "gallery", selectedPhotoId: getActiveRoom().photos[0]?.id ?? null }, { persist: false });
     render();
+    await new Promise((resolve) => window.requestAnimationFrame(() => window.requestAnimationFrame(resolve)));
 
     const latestRoom = getActiveRoom();
     const selected = getSelectedPhoto(latestRoom) ?? latestRoom.photos[0];

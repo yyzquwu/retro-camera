@@ -11,6 +11,43 @@ function getRatioValue(ratioId) {
   return RATIO_OPTIONS.find((ratio) => ratio.id === ratioId)?.value ?? 1;
 }
 
+function escapeSvgText(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function createDemoShotSvgDataUrl({
+  title,
+  accentColor,
+  roomName,
+  width,
+  height,
+}) {
+  const safeTitle = escapeSvgText(title.slice(0, 24));
+  const safeRoomName = escapeSvgText(roomName.slice(0, 32));
+  const safeAccent = escapeSvgText(accentColor);
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${safeAccent}" />
+          <stop offset="45%" stop-color="#1f3940" />
+          <stop offset="100%" stop-color="#f2c268" />
+        </linearGradient>
+      </defs>
+      <rect width="${width}" height="${height}" fill="url(#bg)" />
+      <rect x="26" y="26" width="${width - 52}" height="${height - 52}" fill="none" stroke="rgba(255,255,255,0.32)" stroke-width="6" />
+      <text x="82" y="${height - 160}" fill="rgba(255,247,234,0.92)" font-size="56" font-family="Georgia, serif" font-weight="700">${safeTitle}</text>
+      <text x="82" y="${height - 108}" fill="rgba(255,247,234,0.92)" font-size="30" font-family="Arial, sans-serif">${safeRoomName}</text>
+      <text x="82" y="${height - 64}" fill="rgba(255,247,234,0.92)" font-size="24" font-family="Courier New, monospace">demo capture</text>
+    </svg>
+  `.trim();
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 export class RetroCamera {
   constructor(videoElement) {
     this.videoElement = videoElement;
@@ -156,6 +193,17 @@ export class RetroCamera {
     canvas.height = ratioValue >= 1 ? 1200 : Math.round(1200 / ratioValue);
 
     const context = canvas.getContext("2d");
+    if (!context) {
+      return createDemoShotSvgDataUrl({
+        title,
+        accentColor,
+        roomName,
+        width: canvas.width,
+        height: canvas.height,
+      });
+    }
+
+    try {
     const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
     gradient.addColorStop(0, accentColor);
     gradient.addColorStop(0.45, "#1f3940");
@@ -189,5 +237,15 @@ export class RetroCamera {
     context.strokeRect(26, 26, canvas.width - 52, canvas.height - 52);
 
     return canvas.toDataURL("image/jpeg", 0.92);
+    } catch (error) {
+      console.warn("Falling back to SVG demo shot", error);
+      return createDemoShotSvgDataUrl({
+        title,
+        accentColor,
+        roomName,
+        width: canvas.width,
+        height: canvas.height,
+      });
+    }
   }
 }
