@@ -38,6 +38,25 @@ import {
 
 const STORAGE_DEBOUNCE_MS = 140;
 
+let cachedStageRect = null;
+let stageRectDirty = true;
+
+function getStageRect() {
+  if (!cachedStageRect || stageRectDirty) {
+    cachedStageRect = elements.polaroidLayer.getBoundingClientRect();
+    stageRectDirty = false;
+  }
+  return cachedStageRect;
+}
+
+function invalidateStageRect() {
+  stageRectDirty = true;
+}
+
+const resizeObserver = new ResizeObserver(() => {
+  invalidateStageRect();
+});
+
 const elements = {
   body: document.body,
   modeGrid: document.getElementById("mode-grid"),
@@ -105,6 +124,7 @@ function bootstrap() {
   resolveRoomFromUrl();
   ensureStarterRoomHasSamples();
   render();
+  resizeObserver.observe(elements.polaroidLayer);
   scheduleActiveRoomAssetHydration();
   runSmokeTestIfNeeded();
 }
@@ -410,6 +430,13 @@ function ensureStarterRoomHasSamples() {
   saveState(state);
 }
 
+function invalidateRenderCaches() {
+  lastModeGridType = "";
+  lastRoomListSignature = "";
+  lastStagePhotoSignature = "";
+  invalidateStageRect();
+}
+
 function render() {
   const room = getActiveRoom();
   if (!room) {
@@ -459,7 +486,14 @@ function renderActiveInspectorPanel(room) {
   elements.galleryPanel.innerHTML = "";
 }
 
+let lastModeGridType = "";
+
 function renderModeGrid(room) {
+  if (lastModeGridType === room.typeId) {
+    return;
+  }
+  lastModeGridType = room.typeId;
+
   elements.modeGrid.innerHTML = ROOM_TYPES.map((roomType) => `
     <article class="mode-card ${room.typeId === roomType.id ? "active" : ""}">
       <h3>${roomType.label}</h3>
@@ -474,7 +508,15 @@ function renderModeGrid(room) {
   `).join("");
 }
 
+let lastRoomListSignature = "";
+
 function renderRoomList(activeRoom) {
+  const sig = state.rooms.map((r) => `${r.id}:${r.name}:${r.subtitle}:${r.photos.length}:${r.typeId}`).join("|") + `:${activeRoom.id}`;
+  if (sig === lastRoomListSignature) {
+    return;
+  }
+  lastRoomListSignature = sig;
+
   elements.roomList.innerHTML = state.rooms.map((room) => {
     const photoCount = room.photos.length;
     const type = getRoomTypeById(room.typeId);
@@ -549,11 +591,23 @@ function renderRoomStory(room) {
   `;
 }
 
+let lastStagePhotoSignature = "";
+
 function renderStage(room) {
   const theme = getThemeById(room.themeId);
   elements.stageSurface.className = `stage-surface ${theme.className}`;
   elements.stageEmpty.classList.toggle("hidden", room.photos.length > 0);
-  const layerRect = elements.polaroidLayer.getBoundingClientRect();
+
+  const signature = room.photos.map((p) =>
+    `${p.id}:${p.x}:${p.y}:${p.rotation}:${p.frameId}:${p.presetId}:${p.flipped}:${p.favorite}:${p.caption}:${p.note}:${p.displayDate}:${getDisplaySrc(p)}`
+  ).join("|") + `:${room.themeId}:${room.accentColor}:${room.typeId}:${room.code}:${room.hostLabel}:${room.hostName}:${state.ui.selectedPhotoId}`;
+
+  if (signature === lastStagePhotoSignature) {
+    return;
+  }
+  lastStagePhotoSignature = signature;
+
+  const layerRect = getStageRect();
   const width = layerRect.width || elements.stageSurface.clientWidth || 640;
   const height = layerRect.height || elements.stageSurface.clientHeight || 720;
   elements.polaroidLayer.innerHTML = room.photos
@@ -564,13 +618,22 @@ function renderStage(room) {
 function renderPhotoCardMarkup(room, photo, layerWidth, layerHeight) {
   const selected = photo.id === state.ui.selectedPhotoId;
   const notePreview = photo.note ? photo.note.slice(0, 110) : room.prompt;
-  const tag = room.typeId === "brand" ? room.hostName : room.typeId === "journal" ? "Private note" : room.code;
+  const isFreshPrint = room.photos[room.photos.length - 1]?.id === photo.id;
+  const tag = photo.favorite
+    ? "Favorite"
+    : isFreshPrint
+      ? "Fresh print"
+      : room.typeId === "brand"
+        ? "Campaign cut"
+        : room.typeId === "journal"
+          ? "Journal page"
+          : "Guestbook";
   const safeX = clamp(photo.x, 24, Math.max(24, layerWidth - (photo.width ?? 224) - 18));
   const safeY = clamp(photo.y, 24, Math.max(24, layerHeight - 300));
   const displaySrc = getDisplaySrc(photo);
   return `
     <article
-      class="polaroid-card frame-${photo.frameId} ${photo.flipped ? "is-flipped" : ""} ${selected ? "selected" : ""}"
+      class="polaroid-card frame-${photo.frameId} ${photo.flipped ? "is-flipped" : ""} ${selected ? "selected" : ""} ${isFreshPrint ? "fresh-print" : ""}"
       data-photo-id="${photo.id}"
       style="--x:${safeX}px; --y:${safeY}px; --rotation:${photo.rotation}; --frame-accent:${room.accentColor};"
     >
@@ -586,6 +649,7 @@ function renderPhotoCardMarkup(room, photo, layerWidth, layerHeight) {
               <img
                 src="${displaySrc}"
                 alt="${photo.caption}"
+                loading="lazy"
                 decoding="async"
               >
             </div>
@@ -710,7 +774,15 @@ function renderSelectedPanel(room) {
 
   elements.selectedPanel.innerHTML = `
     <div class="selected-preview">
-      <img src="${getDisplaySrc(photo)}" alt="${escapeAttribute(photo.caption)}" decoding="async">
+      <div class="selected-preview-shell frame-${photo.frameId}">
+        <div class="selected-preview-window">
+          <img src="${getDisplaySrc(photo)}" alt="${escapeAttribute(photo.caption)}" decoding="async">
+        </div>
+        <div class="selected-preview-caption">
+          <strong>${escapeHtml(photo.caption)}</strong>
+          <span>${photo.displayDate}</span>
+        </div>
+      </div>
     </div>
     <label class="field">
       <span class="field-label">Front caption</span>
@@ -854,6 +926,7 @@ function handleModeGridClick(event) {
   state = addRoom(state, room);
   state.ui.selectedPhotoId = null;
   queuePersist();
+  invalidateRenderCaches();
   render();
   scheduleActiveRoomAssetHydration();
 }
@@ -866,6 +939,7 @@ function handleRoomListClick(event) {
   state = setActiveRoom(state, button.dataset.roomId);
   state.ui.selectedPhotoId = getActiveRoom()?.photos[0]?.id ?? null;
   queuePersist();
+  invalidateRenderCaches();
   render();
   scheduleActiveRoomAssetHydration();
 }
@@ -887,6 +961,7 @@ function handleJoinRoom() {
   state.ui.selectedPhotoId = room.photos[0]?.id ?? null;
   queuePersist();
   elements.joinMessage.textContent = `Joined ${room.name}.`;
+  invalidateRenderCaches();
   render();
   scheduleActiveRoomAssetHydration();
 }
@@ -926,7 +1001,7 @@ async function captureFromCurrentSource() {
 
 function createPhotoEntry(src, overrides = {}) {
   const room = getActiveRoom();
-  const stageRect = elements.polaroidLayer.getBoundingClientRect();
+  const stageRect = getStageRect();
   const nextIndex = room.photos.length;
   const photo = createPhoto({
     src,
@@ -978,7 +1053,8 @@ function autoArrangePhotos() {
     return;
   }
 
-  const stageRect = elements.polaroidLayer.getBoundingClientRect();
+  invalidateStageRect();
+  const stageRect = getStageRect();
   const columns = stageRect.width < 720 ? 2 : 3;
   const spacingX = Math.max(180, Math.floor(stageRect.width / (columns + 0.25)));
   const spacingY = 190;
@@ -1286,7 +1362,8 @@ function beginDrag(event) {
   }
 
   updateUi({ selectedPhotoId: photo.id }, { persist: false });
-  const layerRect = elements.polaroidLayer.getBoundingClientRect();
+  invalidateStageRect();
+  const layerRect = getStageRect();
   dragState = {
     photoId: photo.id,
     pointerId: event.pointerId,
@@ -1330,15 +1407,25 @@ function endDrag(event) {
   const y = parseFloat(dragState.element.style.getPropertyValue("--y"));
   dragState.element.classList.remove("dragging");
 
-  updateActiveRoom((draft) => {
-    draft.photos = draft.photos.map((photo) => (
-      photo.id === dragState.photoId
-        ? { ...photo, x: Number.isFinite(x) ? x : photo.x, y: Number.isFinite(y) ? y : photo.y }
-        : photo
-    ));
-  });
-
+  const photoId = dragState.photoId;
+  const finalX = Number.isFinite(x) ? x : null;
+  const finalY = Number.isFinite(y) ? y : null;
   dragState = null;
+
+  const room = getActiveRoom();
+  if (!room) {
+    return;
+  }
+  const draft = structuredClone(room);
+  draft.updatedAt = new Date().toISOString();
+  draft.photos = draft.photos.map((photo) => (
+    photo.id === photoId
+      ? { ...photo, x: finalX ?? photo.x, y: finalY ?? photo.y }
+      : photo
+  ));
+  state = replaceRoom(state, draft);
+  queuePersist();
+  scheduleRender();
 }
 
 function openInviteDialog() {
@@ -1514,7 +1601,7 @@ async function runCountdown(seconds) {
 }
 
 function getStageExportOptions() {
-  const stageRect = elements.polaroidLayer.getBoundingClientRect();
+  const stageRect = getStageRect();
   return {
     referenceWidth: stageRect.width || 960,
     referenceHeight: stageRect.height || 720,
