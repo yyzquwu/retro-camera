@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1063NJS02R"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-1063NJS02R');
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>May I meet you - where you meet the lovely people out there</title>
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="Experience dating through a retro lens. Snap a polaroid, pin it to the 'May I meet you' board, and connect with others in a unique, nostalgic way."
+    />
+    <meta
+      name="keywords"
+      content="retro camera, polaroid, instant camera, photo collage, interactive camera, web camera, photography"
+    />
+    <meta
+      name="author"
+      content="May I meet you"
+    />
+
+    <!-- Open Graph / Facebook -->
+    <meta
+      property="og:type"
+      content="website"
+    />
+    <meta
+      property="og:url"
+      content="https://www.mayimeetyou.online/"
+    />
+    <meta
+      property="og:title"
+      content="May I meet you - where you meet the lovely people out there"
+    />
+    <meta
+      property="og:description"
+      content="Experience dating through a retro lens. Snap a polaroid, pin it to the 'May I meet you' board, and connect with others in a unique, nostalgic way."
+    />
+    <meta
+      property="og:image"
+      content="https://image.social/get?url=bubbbly.com/app/retro-camera.html"
+    />
+    
+
+    <!-- Twitter -->
+    <meta
+      property="twitter:card"
+      content="summary_large_image"
+    />
+    <meta
+      property="twitter:url"
+      content="https://www.mayimeetyou.online/"
+    />
+    <meta
+      property="twitter:title"
+      content="May I meet you - where you meet the lovely people out there"
+    />
+    <meta
+      property="twitter:description"
+      content="Experience dating through a retro lens. Snap a polaroid, pin it to the 'May I meet you' board, and connect with others in a unique, nostalgic way."
+    />
+    <meta
+      property="twitter:image"
+      content="https://image.social/get?url=bubbbly.com/app/retro-camera.html"
+    />
+
+    <!-- Favicons -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="https://www.mayimeetyou.online/favicon.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://www.mayimeetyou.online/favicon-16x16.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://www.mayimeetyou.online/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="96x96"
+      href="https://www.mayimeetyou.online/favicon-96x96.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href="https://www.mayimeetyou.online/favicon-192x192.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="152x152"
+      href="https://www.mayimeetyou.online/apple-icon-152x152.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://www.mayimeetyou.online/apple-icon-180x180.png"
+    />
+    <meta
+      itemprop="image"
+      content="https://www.mayimeetyou.online/favicon-192x192.png"
+    />
+
+    <!-- Theme Colors -->
+    <meta
+      name="theme-color"
+      content="#d4d4d4"
+    />
+    <meta
+      name="msapplication-TileColor"
+      content="#d4d4d4"
+    />
+    <meta
+      name="msapplication-TileImage"
+      content="https://www.mayimeetyou.online/ms-icon-144x144.png"
+    />
+
+    <!-- Web App Manifest -->
+    <link
+      rel="manifest"
+      href="/manifest.json"
+    />
+
+    <!-- Canonical URL -->
+    <link
+      rel="canonical"
+      href="https://www.mayimeetyou.online/"
+    />
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+
+      * {
+        box-sizing: border-box;
+        outline: none;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #d4d4d4;
+        background-image: radial-gradient(#e0e0e0 15%, transparent 16%),
+          radial-gradient(#e0e0e0 15%, transparent 16%);
+        background-size: 20px 20px;
+        background-position: 0 0, 10px 10px;
+        height: 100vh;
+        width: 100vw;
+        font-family: sans-serif;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .camera-zone {
+        flex: 0 0 50%;
+        max-width: 600px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        position: relative;
+        z-index: 20;
+        padding: 20px;
+        padding-bottom: 80px;
+      }
+
+      .camera-wrapper {
+        position: relative;
+        width: 100%;
+        max-width: 450px;
+        aspect-ratio: 1 / 1;
+      }
+
+      .camera-img {
+        width: 100%;
+        height: auto;
+        position: relative;
+        z-index: 20;
+        pointer-events: none;
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.4));
+      }
+
+      .lens-wrapper {
+        position: absolute;
+        bottom: 35%;
+        left: 62%;
+        transform: translateX(-50%);
+        width: 26%;
+        height: 26%;
+        border-radius: 50%;
+        overflow: hidden;
+        z-index: 25;
+        background: #000;
+        box-shadow: inset 0 0 15px #000;
+      }
+
+      video#cam-feed {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+        opacity: 0.9;
+      }
+
+      .lens-shine {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        width: 30%;
+        height: 20%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(-45deg);
+        filter: blur(3px);
+        z-index: 26;
+        pointer-events: none;
+      }
+
+      .shutter-btn {
+        position: absolute;
+        bottom: 42%;
+        left: 18%;
+        width: 11%;
+        height: 11%;
+        border-radius: 50%;
+        z-index: 30;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .ejection-slot {
+        position: absolute;
+        z-index: 15;
+        top: -40%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 35%;
+        height: 100%;
+        pointer-events: none;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        padding-bottom: 20%;
+      }
+
+      .desk-zone {
+        flex: 1;
+        position: relative;
+        height: 100%;
+      }
+
+      /* --- Buttons --- */
+      .btn-container {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 200;
+        display: flex;
+        gap: 10px;
+      }
+
+      /* --- Twitter Link --- */
+      .twitter-link {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 200;
+        background: rgba(255, 255, 255, 0.92);
+        border: 2px solid #ff5da2;
+        color: #ff5da2;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        text-decoration: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+        display: inline-block;
+      }
+      .twitter-text-short {
+        display: none;
+      }
+      .twitter-text-full {
+        display: inline;
+      }
+
+      .twitter-link:hover {
+        background: #ff5da2;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(255, 93, 162, 0.35);
+      }
+
+      .twitter-link:active {
+        transform: scale(0.95);
+      }
+
+      .action-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid #d93025;
+        color: #d93025;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s;
+      }
+
+      .action-btn:hover {
+        background: #d93025;
+        color: white;
+      }
+
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* Specific style for download to look slightly different or same */
+      #download-btn {
+        border-color: #222;
+        color: #222;
+      }
+      #download-btn:hover {
+        background: #222;
+        color: white;
+      }
+
+      /* --- Polaroid Styling --- */
+      .polaroid {
+        width: 170px;
+        position: absolute;
+        cursor: grab;
+        pointer-events: auto;
+        transform-origin: center center;
+        touch-action: none;
+        transition: opacity 0.5s ease-out, transform 0.2s;
+        perspective: 1000px;
+      }
+
+      .polaroid-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+      }
+
+      .polaroid.flipped .polaroid-inner {
+        transform: rotateY(180deg);
+      }
+
+      .polaroid-front,
+      .polaroid-back {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        background: #fdfdfd;
+        padding: 10px 10px 55px 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .polaroid-back {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotateY(180deg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .polaroid:active .polaroid-front,
+      .polaroid:active .polaroid-back {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      .polaroid:active {
+        z-index: 10000 !important;
+      }
+
+      .polaroid img {
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        background: #222;
+        border: 1px solid #e0e0e0;
+        pointer-events: none;
+        display: block;
+        filter: blur(0) grayscale(0) brightness(1);
+        will-change: filter;
+      }
+
+      .polaroid.developing-start img {
+        filter: blur(15px) grayscale(0.5) brightness(0.9);
+      }
+
+      .polaroid.developing-slow img {
+        transition: filter 6s ease-in-out;
+        filter: blur(0) grayscale(0) brightness(1);
+      }
+
+      .polaroid.developing-fast img {
+        transition: filter 3s ease-out !important;
+        filter: blur(0) grayscale(0) brightness(1);
+      }
+
+      .polaroid .caption-main {
+        position: absolute;
+        bottom: 22px;
+        left: 10px;
+        width: 150px;
+        text-align: center;
+        color: #222;
+        opacity: 0.9;
+        cursor: text;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        line-height: 1.1;
+        min-height: 18px;
+      }
+
+      .polaroid .caption-main:empty::before {
+        content: 'May I meet you';
+        opacity: 0.5;
+      }
+
+      .polaroid .caption-date {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        width: 150px;
+        text-align: center;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 10px;
+        color: #555;
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .polaroid.ejecting {
+        transform: translateY(100%);
+        animation: riseOut 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+
+      @keyframes riseOut {
+        0% {
+          transform: translateY(100%);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-50px);
+          opacity: 1;
+        }
+      }
+
+      @keyframes tooltipFade {
+        0% {
+          opacity: 0;
+        }
+        20% {
+          opacity: 1;
+        }
+        80% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+
+      .flip-btn {
+        position: absolute;
+        top: 50%;
+        right: -15px;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        background: rgba(0, 0, 0, 0.15);
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: none; /* Hidden until shared */
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        z-index: 60;
+        color: #555;
+        transition: background 0.2s, opacity 0.3s;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .polaroid.can-share .flip-btn {
+        display: flex;
+      }
+
+      .polaroid.can-share:hover .flip-btn {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .polaroid.can-share.flipped:hover .flip-btn {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .flip-btn:hover {
+        background: rgba(0, 0, 0, 0.2);
+        color: #222;
+      }
+
+      /* Fix for rotate buttons showing through on mobile */
+      .polaroid.flipped .polaroid-front .flip-btn {
+        display: none !important;
+      }
+      .polaroid:not(.flipped) .polaroid-back .flip-btn {
+        display: none !important;
+      }
+
+      .secret-input {
+        width: 100%;
+        height: 100px;
+        border: 1px dashed #ccc;
+        padding: 10px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        color: #333;
+        resize: none;
+        background: #f8f8f8;
+        margin-bottom: 10px;
+      }
+
+      /* --- Share Button on Hover --- */
+      .polaroid-share-btn {
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(217, 48, 37, 0.95);
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 11px;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s, transform 0.2s;
+        z-index: 50;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        white-space: nowrap;
+        display: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .polaroid.can-share .polaroid-share-btn {
+        display: block;
+      }
+
+      .polaroid.can-share:hover .polaroid-share-btn {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .polaroid-share-btn:hover {
+        background: rgba(185, 45, 32, 0.95);
+        transform: translateX(-50%) translateY(-2px) scale(1.05);
+      }
+
+      .polaroid-share-btn:active {
+        transform: translateX(-50%) scale(0.95);
+      }
+
+      /* Mobile: always show button with tap target */
+      @media (max-width: 768px), (hover: none) {
+        .polaroid.can-share .polaroid-share-btn {
+          opacity: 0.9;
+          pointer-events: auto;
+        }
+        .polaroid.can-share .flip-btn {
+          opacity: 0.85;
+          pointer-events: auto;
+          width: 36px;
+          height: 36px;
+          font-size: 20px;
+          right: -18px;
+        }
+        .polaroid.can-share.flipped .flip-btn {
+          opacity: 0.85;
+          pointer-events: auto;
+        }
+      }
+
+      .polaroid-share-btn.uploading {
+        background: rgba(100, 100, 100, 0.95);
+        cursor: not-allowed;
+      }
+
+      .polaroid-share-btn.success {
+        background: rgba(76, 175, 80, 0.95);
+      }
+
+        /* --- Flip Tooltip --- */
+      .flip-tooltip {
+        position: absolute;
+        top: calc(50% + 20px);
+        left: calc(100% + 60px);
+        transform: translateY(-50%) rotate(5deg);
+        background: transparent;
+        color: #222;
+        border: none;
+        padding: 8px 12px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 50;
+        white-space: nowrap;
+      }
+
+      .flip-tooltip::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: -50px;
+        width: 60px;
+        height: 40px;
+        background-image: url('/assets/brush-arrow-2.webp');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: translateY(-50%) rotate(0deg);
+        opacity: 0.9;
+      }
+
+      .polaroid.can-share:hover .flip-tooltip {
+        opacity: 1;
+        transform: translateY(-50%) rotate(5deg);
+      }
+
+      .polaroid.flipped .flip-tooltip {
+        display: none !important;
+      }
+
+      @media (max-width: 768px), (hover: none) {
+        .polaroid.can-share .flip-tooltip {
+          opacity: 0;
+          animation: tooltipFade 4s ease-in-out forwards;
+          left: calc(100% + 50px);
+          top: calc(50% + 20px);
+          transform: translateY(-50%) rotate(5deg);
+          pointer-events: none;
+          max-width: 100px;
+          white-space: normal;
+          line-height: 1.2;
+          text-align: center;
+        }
+      }
+
+      .flash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: white;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 10000;
+        transition: opacity 0.1s;
+      }
+      .flash-active {
+        opacity: 1;
+      }
+
+      /* --- Bottom Navigation Container --- */
+      .bottom-nav {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        z-index: 150;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        pointer-events: none;
+      }
+
+      .bottom-nav > * {
+        pointer-events: auto;
+      }
+
+      /* --- Shared Pin Board --- */
+      .pin-board {
+        position: relative;
+        background: linear-gradient(135deg, #8b7355 0%, #a0826d 100%);
+        border: 3px solid #6b5d47;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+        text-decoration: none;
+      }
+
+      .pin-board:hover {
+        background: linear-gradient(135deg, #9d8568 0%, #b5957a 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+      }
+
+      .pin-board-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #fff;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 13px;
+        padding: 12px 18px;
+        position: relative;
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .pin-board-content::before {
+        content: '📌';
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      /* --- Pin Board Modal --- */
+      .pin-board-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      .pin-board-modal.open {
+        display: flex;
+      }
+
+      .pin-board-modal-content {
+        background: radial-gradient(
+            circle at 20% 30%,
+            rgba(139, 115, 85, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(139, 115, 85, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 80%,
+            rgba(139, 115, 85, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 60% 20%,
+            rgba(139, 115, 85, 0.08) 0%,
+            transparent 50%
+          ),
+          linear-gradient(
+            135deg,
+            #c9a961 0%,
+            #b8955a 25%,
+            #a8824f 50%,
+            #b8955a 75%,
+            #c9a961 100%
+          );
+        background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 95%;
+        width: 100%;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+          inset 0 0 100px rgba(0, 0, 0, 0.1);
+        position: relative;
+        border: 8px solid #8b7355;
+      }
+
+      .pin-board-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.03) 2px,
+            rgba(0, 0, 0, 0.03) 4px
+          ),
+          repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 0, 0, 0.03) 2px,
+            rgba(0, 0, 0, 0.03) 4px
+          );
+        pointer-events: none;
+        border-radius: 12px;
+      }
+
+      .pin-board-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #8b7355;
+        position: relative;
+        z-index: 1;
+      }
+
+      .pin-board-modal-title {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 28px;
+        color: #fff;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .pin-board-modal-close {
+        background: #d93025;
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        font-family: sans-serif;
+        line-height: 1;
+      }
+
+      .pin-board-modal-close:hover {
+        background: #b52d20;
+        transform: scale(1.1);
+      }
+
+      .pin-board-gallery {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        padding: 20px;
+        overflow-y: auto;
+        flex: 1;
+        align-content: flex-start;
+        justify-content: flex-start;
+      }
+
+      .pin-board-gallery-item {
+        position: relative;
+        width: 200px;
+        background: #fdfdfd;
+        padding: 10px 10px 55px 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s, z-index 0.2s;
+        transform-origin: center center;
+        flex-shrink: 0;
+      }
+
+      .pin-board-gallery-item:hover {
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.15);
+        z-index: 100 !important;
+      }
+
+      .pin-board-gallery-item .photo-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        overflow: hidden;
+        background: #222;
+        border: 1px solid #e0e0e0;
+      }
+
+      .pin-board-gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .pin-board-gallery-item::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 16px;
+        height: 16px;
+        background: radial-gradient(circle at 30% 30%, #ff6b6b, #d63031);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
+          inset 0 1px 2px rgba(255, 255, 255, 0.3);
+        z-index: 10;
+      }
+
+      .pin-board-gallery-item::after {
+        content: '';
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(
+          circle,
+          rgba(0, 0, 0, 0.2) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        z-index: 9;
+      }
+
+      .pin-board-gallery-item .photo-caption {
+        position: absolute;
+        bottom: 8px;
+        left: 10px;
+        right: 10px;
+        text-align: center;
+        font-family: 'Permanent Marker', cursive;
+        color: #222;
+        opacity: 0.9;
+        pointer-events: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .pin-board-gallery-item .photo-caption-main {
+        font-size: 14px;
+        line-height: 1.1;
+      }
+
+      .pin-board-gallery-item .photo-caption-date {
+        font-size: 10px;
+        color: #555;
+        margin-top: 2px;
+      }
+
+      .pin-board-gallery-loading {
+        text-align: center;
+        padding: 40px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 20px;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 1;
+      }
+
+      .pin-board-gallery-empty {
+        text-align: center;
+        padding: 60px 20px;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 24px;
+        color: #fff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        position: relative;
+        z-index: 1;
+      }
+
+      .pin-board-gallery-empty::before {
+        content: '📷';
+        display: block;
+        font-size: 64px;
+        margin-bottom: 20px;
+      }
+
+      /* --- Confirmation Modal --- */
+      .confirm-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .confirm-modal.open {
+        display: flex;
+      }
+
+      .confirm-modal-content {
+        background: #fff;
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 400px;
+        width: 100%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+
+      .confirm-modal-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+      }
+
+      .confirm-modal-title {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 22px;
+        color: #222;
+        margin: 0 0 15px 0;
+      }
+
+      .confirm-modal-message {
+        font-family: sans-serif;
+        font-size: 15px;
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 25px;
+      }
+
+      .confirm-modal-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+
+      .confirm-btn {
+        font-family: 'Permanent Marker', cursive;
+        font-size: 14px;
+        padding: 12px 24px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 100px;
+      }
+
+      .confirm-btn-yes {
+        background: #d93025;
+        color: white;
+      }
+
+      .confirm-btn-yes:hover {
+        background: #b52d20;
+        transform: scale(1.05);
+      }
+
+      .confirm-btn-no {
+        background: #e0e0e0;
+        color: #555;
+      }
+
+      .confirm-btn-no:hover {
+        background: #d0d0d0;
+        transform: scale(1.05);
+      }
+
+      .confirm-btn:active {
+        transform: scale(0.95);
+      }
+
+      /* --- Once Link --- */
+      .once-link {
+        position: relative;
+        text-align: right;
+        font-family: 'Permanent Marker', cursive;
+        font-size: 13px;
+        line-height: 1.3;
+        color: #555;
+        text-decoration: none;
+        transition: color 0.2s;
+        max-width: 300px;
+        flex-shrink: 1;
+      }
+
+      .once-link:hover {
+        color: #d93025;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+        .camera-zone {
+          flex: 0 0 auto;
+          width: 100%;
+          height: auto;
+          padding-top: 60px;
+          padding-bottom: 40px;
+          justify-content: center;
+        }
+        .desk-zone {
+          width: 100%;
+          height: 100%;
+        }
+        .twitter-link {
+          top: 10px;
+          left: 10px;
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+        .twitter-text-full {
+          display: none;
+        }
+        .twitter-text-short {
+          display: inline;
+        }
+        .btn-container {
+          top: 10px;
+          right: 10px;
+        }
+        .action-btn {
+          font-size: 10px;
+          padding: 5px 10px;
+        }
+        .bottom-nav {
+          bottom: 10px;
+          left: 10px;
+          right: 10px;
+          gap: 10px;
+        }
+        .once-link {
+          font-size: 9px;
+          max-width: 140px;
+          line-height: 1.2;
+        }
+        .pin-board-content {
+          font-size: 11px;
+          padding: 10px 14px;
+          gap: 6px;
+        }
+        .pin-board-content::before {
+          font-size: 16px;
+        }
+        .pin-board-modal-content {
+          padding: 20px;
+          max-width: 95%;
+        }
+        .pin-board-modal-title {
+          font-size: 22px;
+        }
+        .pin-board-gallery {
+          gap: 15px;
+          padding: 15px;
+        }
+        .pin-board-gallery-item {
+          width: 150px;
+        }
+        .polaroid-share-btn {
+          font-size: 10px;
+          padding: 6px 10px;
+          top: -12px;
+        }
+        .confirm-modal-content {
+          padding: 25px;
+          max-width: 90%;
+        }
+        .confirm-modal-icon {
+          font-size: 40px;
+        }
+        .confirm-modal-title {
+          font-size: 18px;
+        }
+        .confirm-modal-message {
+          font-size: 14px;
+        }
+        .confirm-btn {
+          font-size: 12px;
+          padding: 10px 18px;
+          min-width: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a
+      href="https://x.com/ann_nnng"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="twitter-link"
+      title="Follow me on Twitter"
+    >
+      <span class="twitter-text-full">Follow me for more fun stuff</span>
+      <span class="twitter-text-short">Follow me</span>
+    </a>
+
+    <div class="btn-container">
+      <button
+        class="action-btn"
+        id="download-btn"
+        title="Download Collage"
+      >
+        DOWNLOAD
+      </button>
+      <button
+        class="action-btn"
+        id="reset-btn"
+        title="Clear all photos"
+      >
+        RESET
+      </button>
+    </div>
+
+    <div class="camera-zone">
+      <div class="camera-wrapper">
+        <div
+          class="ejection-slot"
+          id="slot"
+        ></div>
+        <div class="lens-wrapper">
+          <video
+            id="cam-feed"
+            autoplay
+            playsinline
+            muted
+          ></video>
+          <div class="lens-shine"></div>
+        </div>
+        <img
+          src="https://www.mayimeetyou.online/retro-camera.webp"
+          class="camera-img"
+          alt="Retro Camera"
+        />
+        <div
+          class="shutter-btn"
+          id="shutter"
+        ></div>
+      </div>
+    </div>
+
+    <div
+      class="desk-zone"
+      id="desk"
+    ></div>
+
+    <div
+      class="flash"
+      id="flash"
+    ></div>
+    <canvas
+      id="canvas"
+      style="display: none"
+    ></canvas>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <a
+        href="https://www.mayimeetyou.online/gallery.html"
+        class="pin-board"
+        id="pin-board"
+      >
+        <div class="pin-board-content">
+          <div>View Public Pinboard Gallery</div>
+        </div>
+      </a>
+
+      <a
+        href="https://once.film/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="once-link"
+      >
+        Use Once to capture your day<br />through everyone's eyes →
+      </a>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div
+      class="confirm-modal"
+      id="confirm-modal"
+    >
+      <div class="confirm-modal-content">
+        <div class="confirm-modal-icon">🌍</div>
+        <h3 class="confirm-modal-title">Share to Public Pinboard?</h3>
+        <p class="confirm-modal-message">
+          This photo will be visible to everyone who visits the gallery. Are you
+          sure you want to share it publicly?
+        </p>
+        <div class="confirm-modal-buttons">
+          <button
+            class="confirm-btn confirm-btn-no"
+            id="confirm-no"
+          >
+            Cancel
+          </button>
+          <button
+            class="confirm-btn confirm-btn-yes"
+            id="confirm-yes"
+          >
+            Yes, Share It!
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const video = document.getElementById('cam-feed');
+      const canvas = document.getElementById('canvas');
+      const shutter = document.getElementById('shutter');
+      const slot = document.getElementById('slot');
+      const flash = document.getElementById('flash');
+      const desk = document.getElementById('desk');
+      const resetBtn = document.getElementById('reset-btn');
+      const downloadBtn = document.getElementById('download-btn');
+      const cameraZone = document.querySelector('.camera-zone');
+      const btnContainer = document.querySelector('.btn-container');
+      const confirmModal = document.getElementById('confirm-modal');
+      const confirmYes = document.getElementById('confirm-yes');
+      const confirmNo = document.getElementById('confirm-no');
+
+      const printSound = new Audio(
+        '/polaroid-camera.mp3'
+      );
+      printSound.volume = 0.6;
+
+      let demosCleared = false;
+      let pendingUpload = null; // Store pending upload data
+
+      // Check if user has confirmed public sharing before
+      function hasConfirmedSharing() {
+        return localStorage.getItem('retroCameraShareConfirmed') === 'true';
+      }
+
+      // Mark that user has confirmed sharing
+      function setShareConfirmed() {
+        localStorage.setItem('retroCameraShareConfirmed', 'true');
+      }
+
+      navigator.mediaDevices
+        .getUserMedia({
+          video: { facingMode: 'user', width: 480, height: 480 },
+        })
+        .then((stream) => (video.srcObject = stream))
+        .catch((err) => console.error(err));
+
+      function getTodayDateString() {
+        const d = new Date();
+        const yyyy = d.getFullYear();
+        const mm = String(d.getMonth() + 1).padStart(2, '0');
+        const dd = String(d.getDate()).padStart(2, '0');
+        return `${yyyy}/${mm}/${dd}`;
+      }
+
+      const demoDate = getTodayDateString();
+      const demos = [
+        {
+          src: 'https://www.mayimeetyou.online/cat-cute-3.webp',
+          rot: '-5deg',
+          top: '30%',
+          left: '30%',
+        },
+        {
+          src: 'https://www.mayimeetyou.online/cat-cute-2.webp',
+          rot: '8deg',
+          top: '35%',
+          left: '45%',
+        },
+        {
+          src: 'https://www.mayimeetyou.online/cat-cute-1.webp',
+          rot: '-12deg',
+          top: '45%',
+          left: '35%',
+        },
+      ];
+
+      function spawnDemos() {
+        desk.innerHTML = '';
+        demosCleared = false;
+        demos.forEach((d) => {
+          createPolaroidElement(
+            d.src,
+            demoDate,
+            d.top,
+            d.left,
+            d.rot,
+            true,
+            false
+          );
+        });
+      }
+
+      spawnDemos();
+
+      function createPolaroidElement(
+        imgSrc,
+        dateStr,
+        top,
+        left,
+        rot,
+        isDemo = false,
+        isNew = false
+      ) {
+        const MAX_LETTERS = 27;
+        const MAX_CAPTION_LENGTH = 14;
+        const MAX_SECRET_LENGTH = 20;
+
+        const div = document.createElement('div');
+        div.className = isDemo ? 'polaroid demo-polaroid' : 'polaroid';
+
+        if (isNew) {
+          div.classList.add('developing-start');
+        }
+
+        // Create the inner structure for flipping
+        div.innerHTML = `
+          <div class="polaroid-inner">
+            <div class="polaroid-front">
+              <img src="${imgSrc}">
+              <button class="polaroid-share-btn">Add to Public Pinboard</button>
+              <button class="flip-btn" title="Flip to back">↻</button>
+              <div class="caption-main" contenteditable="true" spellcheck="false">May I meet you</div>
+              <div class="caption-date">${dateStr}</div>
+              <div class="flip-tooltip">Flip back to write your message</div>
+            </div>
+            <div class="polaroid-back">
+              <button class="polaroid-share-btn">Add to Public Pinboard</button>
+              <textarea class="secret-input" placeholder="Secret message"></textarea>
+              <button class="flip-btn" title="Flip to front">↻</button>
+            </div>
+          </div>
+        `;
+
+        if (top) div.style.top = top;
+        if (left) div.style.left = left;
+        if (rot) div.style.transform = `rotate(${rot})`;
+
+        if (isDemo) {
+          desk.appendChild(div);
+        } else if (isNew) {
+          requestAnimationFrame(() => {
+            div.offsetWidth;
+            div.classList.add('developing-slow');
+            div.classList.remove('developing-start');
+          });
+        }
+
+        // Flip logic
+        const inner = div.querySelector('.polaroid-inner');
+        const flipBtns = div.querySelectorAll('.flip-btn');
+        flipBtns.forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            div.classList.toggle('flipped');
+          });
+        });
+
+        // Prevent drag on textarea
+        const secretInput = div.querySelector('.secret-input');
+        secretInput.addEventListener('mousedown', (e) => e.stopPropagation());
+        secretInput.addEventListener('touchstart', (e) => e.stopPropagation());
+
+        // Add share button functionality for both front and back
+        const shareBtns = div.querySelectorAll('.polaroid-share-btn');
+        shareBtns.forEach(shareBtn => {
+          shareBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            // Check if user has confirmed before
+            if (hasConfirmedSharing()) {
+              // Already confirmed, proceed with upload
+              uploadPolaroidImage(div, shareBtn);
+            } else {
+              // First time, show confirmation modal
+              pendingUpload = { polaroid: div, button: shareBtn };
+              confirmModal.classList.add('open');
+            }
+          });
+        });
+
+        // Limit caption text and secret message dynamically
+        const captionMain = div.querySelector('.caption-main');
+        // secretInput is already defined above
+
+        if (captionMain && secretInput) {
+          // Caption Input Handler
+          captionMain.addEventListener('input', function () {
+            const text = this.textContent;
+            const currentSecretLen = secretInput.value.length;
+            // Calculate max allowed for caption: must be <= 14 AND (caption + secret <= 30)
+            // So caption <= 30 - secret
+            const dynamicMax = MAX_LETTERS - currentSecretLen;
+            const allowedLen = Math.min(MAX_CAPTION_LENGTH, dynamicMax);
+
+            if (text.length > allowedLen) {
+              // Trim
+              this.textContent = text.substring(0, allowedLen);
+              // Restore cursor to end
+              const range = document.createRange();
+              const sel = window.getSelection();
+              range.selectNodeContents(this);
+              range.collapse(false);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+          });
+
+          // Prevent line breaks in caption
+          captionMain.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+            }
+          });
+
+          // Secret Input Handler
+          secretInput.addEventListener('input', function () {
+            const text = this.value;
+            const currentCaptionLen = captionMain.textContent.length;
+            // Calculate max allowed for secret: must be <= 20 AND (caption + secret <= 30)
+            const dynamicMax = MAX_LETTERS - currentCaptionLen;
+            const allowedLen = Math.min(MAX_SECRET_LENGTH, dynamicMax);
+
+            if (text.length > allowedLen) {
+              this.value = text.substring(0, allowedLen);
+            }
+          });
+        }
+
+        makeDraggable(div);
+        return div;
+      }
+
+      function clearDemos() {
+        const demoItems = document.querySelectorAll('.demo-polaroid');
+        demoItems.forEach((item) => {
+          item.style.opacity = '0';
+          item.style.transform = 'scale(0.8)';
+          setTimeout(() => item.remove(), 500);
+        });
+      }
+
+      resetBtn.addEventListener('click', () => {
+        document.querySelectorAll('.polaroid').forEach((p) => p.remove());
+        demosCleared = false;
+        desk.innerHTML = '';
+        slot.innerHTML = '';
+        spawnDemos();
+      });
+
+      // --- Download Logic ---
+      downloadBtn.addEventListener('click', () => {
+        // 1. Hide UI elements we don't want in the screenshot
+        cameraZone.style.display = 'none';
+        btnContainer.style.display = 'none';
+
+        // 2. Use html2canvas to screenshot the body (which contains background + photos)
+        html2canvas(document.body, {
+          backgroundColor: '#d4d4d4', // Ensure background color is captured
+          useCORS: true, // Attempt to load external images (demo cats)
+          scale: 2, // High resolution
+        })
+          .then((canvas) => {
+            // 3. Trigger Download
+            const link = document.createElement('a');
+            link.download = 'my-polaroid-collage.png';
+            link.href = canvas.toDataURL();
+            link.click();
+
+            // 4. Restore UI
+            cameraZone.style.display = 'flex';
+            btnContainer.style.display = 'flex';
+          })
+          .catch((err) => {
+            console.error('Screenshot failed', err);
+            alert(
+              'Could not download image. Security restrictions on images might be preventing it.'
+            );
+            // Restore UI in case of error
+            cameraZone.style.display = 'flex';
+            btnContainer.style.display = 'flex';
+          });
+      });
+
+      shutter.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (!demosCleared) {
+          clearDemos();
+          demosCleared = true;
+        }
+
+        flash.classList.add('flash-active');
+        setTimeout(() => flash.classList.remove('flash-active'), 100);
+
+        printSound.currentTime = 0;
+        printSound.play().catch((e) => {});
+
+        const ctx = canvas.getContext('2d');
+        const size = Math.min(video.videoWidth, video.videoHeight);
+        canvas.width = 400;
+        canvas.height = 400;
+        ctx.translate(400, 0);
+        ctx.scale(-1, 1);
+        ctx.drawImage(
+          video,
+          (video.videoWidth - size) / 2,
+          (video.videoHeight - size) / 2,
+          size,
+          size,
+          0,
+          0,
+          400,
+          400
+        );
+
+        ejectPhoto(canvas.toDataURL('image/jpeg'));
+      });
+
+      function ejectPhoto(src) {
+        if (slot.firstChild) slot.removeChild(slot.firstChild);
+        const p = createPolaroidElement(
+          src,
+          getTodayDateString(),
+          null,
+          null,
+          null,
+          false,
+          true
+        );
+        p.classList.add('ejecting');
+        slot.appendChild(p);
+      }
+
+      // Confirmation Modal ESC key handler
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && confirmModal.classList.contains('open')) {
+          closeConfirmModal();
+        }
+      });
+
+      // Confirmation Modal Handlers
+      confirmYes.addEventListener('click', () => {
+        setShareConfirmed(); // Remember user's choice
+        closeConfirmModal();
+
+        // Proceed with the upload
+        if (pendingUpload) {
+          uploadPolaroidImage(pendingUpload.polaroid, pendingUpload.button);
+          pendingUpload = null;
+        }
+      });
+
+      confirmNo.addEventListener('click', () => {
+        closeConfirmModal();
+        pendingUpload = null;
+      });
+
+      // Close confirm modal when clicking outside
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) {
+          closeConfirmModal();
+          pendingUpload = null;
+        }
+      });
+
+      function closeConfirmModal() {
+        confirmModal.classList.remove('open');
+      }
+
+      async function uploadPolaroidImage(polaroidElement, clickedBtn) {
+        const img = polaroidElement.querySelector('img');
+        if (!img) return;
+
+        const imgSrc = img.src;
+
+        // Get the caption text from the polaroid
+        const captionElement = polaroidElement.querySelector('.caption-main');
+        const captionText = captionElement
+          ? captionElement.innerText.trim() // Use innerText to avoid HTML tags
+          : '';
+        
+        // Get the secret text from the back
+        const secretElement = polaroidElement.querySelector('.secret-input');
+        const secretText = secretElement ? secretElement.value.replace(/<[^>]*>?/gm, '').trim() : ''; // Strip HTML tags
+        
+        // Texts are already limited by the input event listeners, but we double check sum
+        // If somehow they exceed, we truncate the back text first.
+        let finalFront = captionText;
+        let finalBack = secretText;
+        
+        // Hard limits just in case
+        if (finalFront.length > 14) finalFront = finalFront.substring(0, 14);
+        if (finalBack.length > 20) finalBack = finalBack.substring(0, 20);
+
+        // Combined limit check (<= 30)
+        if (finalFront.length + finalBack.length > 30) {
+             const availableForBack = 30 - finalFront.length;
+             finalBack = finalBack.substring(0, Math.max(0, availableForBack));
+        }
+
+        const limitedFrontText = finalFront;
+        const limitedBackText = finalBack;
+
+        // Update ALL share buttons state
+        const allShareBtns = polaroidElement.querySelectorAll('.polaroid-share-btn');
+        allShareBtns.forEach(btn => {
+            btn.classList.add('uploading');
+            btn.textContent = 'Uploading...';
+            btn.disabled = true;
+        });
+
+        try {
+          let blob;
+
+          if (imgSrc.startsWith('data:')) {
+            const response = await fetch(imgSrc);
+            blob = await response.blob();
+          } else if (
+            imgSrc.startsWith('http://') ||
+            imgSrc.startsWith('https://')
+          ) {
+            const response = await fetch(imgSrc, { mode: 'cors' });
+            if (!response.ok) {
+              throw new Error('Failed to fetch image');
+            }
+            blob = await response.blob();
+          } else {
+            throw new Error('Unsupported image source');
+          }
+
+          const formData = new FormData();
+          formData.append('image', blob, 'polaroid.jpg');
+
+          // Combine texts for the single 'text' field allowed by API (max 30 chars)
+          let combinedText = limitedFrontText;
+          if (limitedBackText) {
+             // Use pipe as separator. 14 chars (front) + 1 char (|) + 15 chars (back) = 30 chars
+             combinedText = limitedFrontText + '|' + limitedBackText;
+          }
+
+          // Add the combined text as the main 'text' parameter
+          if (combinedText) {
+            formData.append('text', combinedText);
+          }
+          
+          // Keep separate fields for potential future backend support
+          if (limitedFrontText) {
+            formData.append('frontText', limitedFrontText);
+          }
+
+          // Add the secret text if it exists
+          if (limitedBackText) {
+            formData.append('backText', limitedBackText);
+          }
+
+          // Append texts to URL query params as well
+          const uploadUrlObj = new URL(
+            'https://retro-cam-app-uploader.vercel.app/api/upload'
+          );
+          if (limitedFrontText) {
+            uploadUrlObj.searchParams.append('frontText', limitedFrontText);
+          }
+          if (limitedBackText) {
+            uploadUrlObj.searchParams.append('backText', limitedBackText);
+          }
+
+          const uploadResponse = await fetch(uploadUrlObj.toString(), {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!uploadResponse.ok) {
+            const errorData = await uploadResponse.json().catch(() => ({}));
+            throw new Error(
+              errorData.message || `Upload failed: ${uploadResponse.status}`
+            );
+          }
+
+          const result = await uploadResponse.json();
+
+          // Success
+          allShareBtns.forEach(btn => {
+            btn.classList.remove('uploading');
+            btn.classList.add('success');
+            btn.textContent = '✓ Uploaded!';
+          });
+
+          // Reset button after 3 seconds
+          setTimeout(() => {
+             allShareBtns.forEach(btn => {
+                btn.classList.remove('success');
+                btn.textContent = 'Add to Public Pinboard';
+                btn.disabled = false;
+             });
+          }, 3000);
+        } catch (error) {
+          console.error('Upload error:', error);
+          
+          allShareBtns.forEach(btn => {
+             btn.classList.remove('uploading');
+             btn.textContent = '✗ Failed. Try again';
+          });
+
+          // Reset button after 3 seconds
+          setTimeout(() => {
+            allShareBtns.forEach(btn => {
+                btn.textContent = 'Add to Public Pinboard';
+                btn.disabled = false;
+            });
+          }, 3000);
+        }
+      }
+
+      function makeDraggable(elm) {
+        let startX = 0,
+          startY = 0,
+          initialLeft = 0,
+          initialTop = 0;
+
+        elm.addEventListener('mousedown', dragStart);
+        elm.addEventListener('touchstart', dragStart, { passive: false });
+
+        function dragStart(e) {
+          // Don't drag if clicking/tapping caption, share button, flip button, or secret input
+          if (
+            e.target.closest('.caption-main') ||
+            e.target.closest('.polaroid-share-btn') ||
+            e.target.closest('.flip-btn') ||
+            e.target.closest('.secret-input')
+          ) {
+            return;
+          }
+
+          e.preventDefault();
+
+          if (elm.classList.contains('developing-slow')) {
+            elm.classList.remove('developing-slow');
+            void elm.offsetWidth;
+            elm.classList.add('developing-fast');
+          }
+
+          if (elm.classList.contains('ejecting')) {
+            const rect = elm.getBoundingClientRect();
+            elm.classList.remove('ejecting');
+            document.body.appendChild(elm);
+            elm.style.position = 'absolute';
+            elm.style.left = rect.left + 'px';
+            elm.style.top = rect.top + 'px';
+            elm.style.transform = 'rotate(0deg)';
+          } else if (elm.parentNode !== document.body) {
+            const rect = elm.getBoundingClientRect();
+            document.body.appendChild(elm);
+            elm.style.left = rect.left + 'px';
+            elm.style.top = rect.top + 'px';
+          }
+
+          elm.style.zIndex = 10000;
+
+          if (e.type === 'touchstart') {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+          } else {
+            startX = e.clientX;
+            startY = e.clientY;
+          }
+
+          initialLeft = elm.offsetLeft;
+          initialTop = elm.offsetTop;
+
+          document.addEventListener('mouseup', dragEnd);
+          document.addEventListener('mousemove', dragMove);
+          document.addEventListener('touchend', dragEnd);
+          document.addEventListener('touchmove', dragMove, { passive: false });
+        }
+
+        function dragMove(e) {
+          e.preventDefault();
+          let currentX, currentY;
+
+          if (e.type === 'touchmove') {
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+          } else {
+            currentX = e.clientX;
+            currentY = e.clientY;
+          }
+
+          const dx = currentX - startX;
+          const dy = currentY - startY;
+
+          elm.style.left = initialLeft + dx + 'px';
+          elm.style.top = initialTop + dy + 'px';
+
+          const tilt = Math.max(-8, Math.min(8, dx * 0.1));
+          elm.style.transform = `rotate(${tilt}deg) scale(1.05)`;
+        }
+
+        function dragEnd() {
+          document.removeEventListener('mouseup', dragEnd);
+          document.removeEventListener('mousemove', dragMove);
+          document.removeEventListener('touchend', dragEnd);
+          document.removeEventListener('touchmove', dragMove);
+
+          // Enable share button now that the polaroid has been placed on the desk
+          elm.classList.add('can-share');
+
+          elm.style.zIndex = 'auto';
+          const finalRot = (Math.random() * 20 - 10).toFixed(1);
+          elm.style.transition = 'transform 0.2s, box-shadow 0.2s';
+          elm.style.transform = `rotate(${finalRot}deg) scale(1)`;
+          setTimeout(() => {
+            elm.style.transition = '';
+          }, 200);
+        }
+      }
+    </script>
+  </body>
+</html>

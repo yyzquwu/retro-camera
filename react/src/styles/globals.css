@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Indie+Flower&family=Space+Grotesk:wght@400;500;700&display=swap');
+
+:root {
+  /* Cute SaaS / Neo-Brutalism Palette from Figma Community Research */
+  --color-bg-base: #fff9e6; /* Soft Cream */
+  --color-bg-alt: #f0e6d2;
+  --color-text-main: #111111; /* Sharp Black for high contrast */
+  --color-text-muted: #444444;
+  --color-primary: #ff6b6b; /* Playful Retro Red/Pink */
+  --color-primary-dark: #e55a5a;
+  --color-accent: #fcd34d; /* Bright Yellow accent */
+  --color-polaroid-white: #ffffff;
+  
+  --font-main: 'Space Grotesk', sans-serif;
+  --font-serif: 'Fraunces', serif;
+  --font-accent: 'Indie Flower', cursive;
+
+  --transition-restrained: all 0.2s ease-in-out;
+  
+  /* Neo-brutalism borders and shadows */
+  --border-thick: 3px solid var(--color-text-main);
+  --shadow-solid: 4px 4px 0px var(--color-text-main);
+  --shadow-solid-hover: 2px 2px 0px var(--color-text-main);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* OpenAI Frontend Skill: Whitespace over chrome */
+.container-full {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  background: none;
+  transition: var(--transition-restrained);
+}
+
+/* Textures */
+.paper-grain {
+  position: relative;
+}
+
+.paper-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("https://www.transparenttextures.com/patterns/natural-paper.png");
+  z-index: 1;
+}
+
+.grid-dots {
+  background-image: radial-gradient(rgba(45, 41, 38, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+}

@@ -112,56 +112,40 @@
             </div>
           </div>
 
-          <div class="camera-body">
-            <div class="camera-body-top">
-              <div class="camera-meter">
-                <span class="meter-dot active"></span>
-                <span class="meter-dot"></span>
-                <span class="meter-label" id="camera-meter-label">Ready</span>
+          <div class="cute-camera-container">
+            <div class="cute-camera-wrapper">
+              <img src="https://www.bubbbly.com/assets/retro-camera.webp" class="cute-camera-img" alt="Retro Camera">
+              
+              <div class="cute-lens-wrapper">
+                <video id="camera-feed" autoplay playsinline muted></video>
+                <div class="camera-placeholder" id="camera-placeholder">
+                  <p>Off</p>
+                </div>
+                <div class="lens-gloss"></div>
+                <div class="timer-countdown hidden" id="timer-countdown">3</div>
               </div>
-              <div class="camera-logo">
-                <span>Room</span>
-                <span>Studio</span>
-              </div>
+              
+              <div class="cute-shutter-btn" id="capture-btn" title="Take Photo"></div>
             </div>
 
-            <div class="lens-panel">
-              <video id="camera-feed" autoplay playsinline muted></video>
-              <div class="camera-placeholder" id="camera-placeholder">
-                <div class="placeholder-badge">Demo Feed</div>
-                <p>No live stream yet</p>
-                <span>Start camera or import a photo.</span>
+            <!-- Overlaid details from UI -->
+            <div class="camera-meta-badges">
+              <div class="camera-meter">
+                <span class="meter-label" id="camera-meter-label">Ready</span>
               </div>
-              <div class="lens-gloss"></div>
-              <div class="timer-countdown hidden" id="timer-countdown">3</div>
               <div class="preview-caption">
                 <span id="preview-preset-label">Warm 70s</span>
                 <span id="preview-ratio-label">1:1</span>
               </div>
             </div>
 
-            <div class="camera-controls">
-              <button class="ghost-button" id="start-camera-btn" type="button">
-                Start Camera
-              </button>
-              <button class="ghost-button" id="switch-camera-btn" type="button">
-                Switch Lens
-              </button>
-              <label class="ghost-button upload-button" for="photo-upload-input">
-                Import Photo
-              </label>
-              <input
-                id="photo-upload-input"
-                type="file"
-                accept="image/*"
-                hidden
-              >
+            <!-- Action Controls below camera -->
+            <div class="camera-controls cute-controls">
+              <button class="ghost-button" id="start-camera-btn" type="button">Power On</button>
+              <button class="ghost-button" id="switch-camera-btn" type="button">Flip Lens</button>
+              <label class="ghost-button upload-button" for="photo-upload-input">Import</label>
+              <input id="photo-upload-input" type="file" accept="image/*" hidden>
             </div>
-
-            <button class="shutter-button" id="capture-btn" type="button">
-              <span class="shutter-ring"></span>
-              <span class="shutter-core"></span>
-            </button>
           </div>
 
           <div class="control-grid">

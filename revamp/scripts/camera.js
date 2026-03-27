@@ -71,8 +71,8 @@ export class RetroCamera {
         audio: false,
         video: {
           facingMode,
-          width: { ideal: 1440 },
-          height: { ideal: 1440 },
+          width: { ideal: 480 },
+          height: { ideal: 480 },
         },
       });
       this.videoElement.srcObject = this.stream;
